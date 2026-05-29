@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Intake Forms')}"></head>
+<body>
+	<div class="admin-layout">
+		<aside th:replace="~{fragments/layout :: sidebar('intake-form')}"></aside>
+		<div th:replace="~{fragments/layout :: backdrop}"></div>
+		<div class="workspace">
+			<header th:replace="~{fragments/layout :: topbar}"></header>
+			<main class="content">
+				<section class="users-page" aria-labelledby="intake-form-heading">
+					<h1 id="intake-form-heading">Intake Forms</h1>
+
+					<div class="users-message success" th:if="${param.created}">
+						Intake form created successfully.
+					</div>
+
+					<div class="users-toolbar">
+						<form class="user-search" th:action="@{/intake-form}" method="get" role="search">
+							<label class="visually-hidden" for="intake-form-search">Search intake forms</label>
+							<input id="intake-form-search"
+								   class="form-control"
+								   type="search"
+								   name="search"
+								   th:value="${search}"
+								   placeholder="Search by account ID or patient name">
+							<button class="toolbar-button search-button" type="submit">Search</button>
+						</form>
+						<a class="toolbar-button create-button" th:href="@{/intake-form/create}">+ Create</a>
+					</div>
+
+					<div class="users-table-wrapper">
+						<table class="users-table">
+							<thead>
+								<tr>
+									<th scope="col">Account ID</th>
+									<th scope="col">Patient Name</th>
+									<th scope="col">Created By</th>
+									<th scope="col">Created On</th>
+									<th scope="col">Prescribed By</th>
+									<th scope="col" class="actions-heading">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="intakeForm : ${intakeForms.content}">
+									<td th:text="${intakeForm.accountId}">1001</td>
+									<td th:text="${intakeForm.fullName}">Patient Name</td>
+									<td th:text="${intakeForm.createdBy}">Staff Name</td>
+									<td th:text="${intakeForm.createdOn == null ? '' : #temporals.format(intakeForm.createdOn, 'MM/dd/yyyy')}">05/26/2026</td>
+									<td th:text="${intakeForm.prescribedBy}">Doctor Name</td>
+									<td class="row-actions">
+										<a class="table-action edit"
+										   th:href="@{/intake-form/{id}/view(id=${intakeForm.id})}">View</a>
+										<a class="table-action prescription"
+										   th:if="${grantedAuthorities.contains('ROLE_ADMIN') or grantedAuthorities.contains('provide_prescription')}"
+										   th:href="@{/intake-form/{id}/prescription/create(id=${intakeForm.id})}">Prescription</a>
+									</td>
+								</tr>
+								<tr th:if="${intakeForms.empty}">
+									<td class="empty-results" colspan="6">No intake forms found.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="pagination-bar">
+						<p class="result-count"
+						   th:if="${!intakeForms.empty}"
+						   th:text="|Showing ${intakeForms.number * intakeForms.size + 1}-${intakeForms.number * intakeForms.size + intakeForms.numberOfElements} of ${intakeForms.totalElements} intake forms|">
+							Showing intake forms
+						</p>
+						<p class="result-count" th:if="${intakeForms.empty}">0 intake forms</p>
+						<nav class="page-navigation" th:if="${intakeForms.totalPages > 1}" aria-label="Intake form results pages">
+							<a class="page-link"
+							   th:classappend="${intakeForms.first} ? ' disabled' : ''"
+							   th:href="${intakeForms.first} ? null : @{/intake-form(search=${search}, page=${intakeForms.number - 1})}">Previous</a>
+							<a class="page-link"
+							   th:each="pageNumber : ${#numbers.sequence(0, intakeForms.totalPages - 1)}"
+							   th:classappend="${pageNumber == intakeForms.number} ? ' current' : ''"
+							   th:href="@{/intake-form(search=${search}, page=${pageNumber})}"
+							   th:text="${pageNumber + 1}">1</a>
+							<a class="page-link"
+							   th:classappend="${intakeForms.last} ? ' disabled' : ''"
+							   th:href="${intakeForms.last} ? null : @{/intake-form(search=${search}, page=${intakeForms.number + 1})}">Next</a>
+						</nav>
+					</div>
+				</section>
+			</main>
+		</div>
+	</div>
+	<script th:replace="~{fragments/layout :: scripts}"></script>
+</body>
+</html>

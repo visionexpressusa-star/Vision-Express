@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Users')}"></head>
+<body>
+	<div class="admin-layout">
+		<aside th:replace="~{fragments/layout :: sidebar('users')}"></aside>
+		<div th:replace="~{fragments/layout :: backdrop}"></div>
+		<div class="workspace">
+			<header th:replace="~{fragments/layout :: topbar}"></header>
+			<main class="content">
+				<section class="users-page" aria-labelledby="users-heading">
+					<h1 id="users-heading">Users</h1>
+
+					<div class="users-message success" th:if="${param.created}">
+						User created successfully.
+					</div>
+					<div class="users-message success" th:if="${param.updated}">
+						User updated successfully.
+					</div>
+					<div class="users-message success" th:if="${param.statusChanged}">
+						User status updated successfully.
+					</div>
+
+					<div class="users-toolbar">
+						<form class="user-search" th:action="@{/users}" method="get" role="search">
+							<label class="visually-hidden" for="user-search">Search users</label>
+							<input id="user-search"
+								   class="form-control"
+								   type="search"
+								   name="search"
+								   th:value="${search}"
+								   placeholder="Search by ID, username, or display name">
+							<button class="toolbar-button search-button" type="submit">Search</button>
+						</form>
+						<a class="toolbar-button create-button" th:href="@{/users/create}">+ Create</a>
+					</div>
+
+					<div class="users-table-wrapper">
+						<table class="users-table">
+							<thead>
+								<tr>
+									<th scope="col">User ID</th>
+									<th scope="col">Username</th>
+									<th scope="col">Display Name</th>
+									<th scope="col">Role</th>
+									<th scope="col" class="actions-heading">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="user : ${users.content}">
+									<td th:text="${user.id}">1</td>
+									<td th:text="${user.username}">admin</td>
+									<td th:text="${user.displayName}">Administrator</td>
+									<td th:text="${user.role.name}">ADMIN</td>
+									<td class="row-actions">
+										<a class="table-action edit" th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a>
+										<form th:if="${user.role.name != 'ADMIN'}"
+											  th:action="@{/users/{id}/active(id=${user.id})}"
+											  method="post">
+											<input type="hidden" name="active" th:value="${!user.active}">
+											<input type="hidden" name="search" th:value="${search}">
+											<input type="hidden" name="page" th:value="${users.number}">
+											<button class="table-action status"
+													th:classappend="${user.active} ? ' deactivate' : ' activate'"
+													type="submit"
+													th:text="${user.active} ? 'Deactivate' : 'Activate'">Deactivate</button>
+										</form>
+									</td>
+								</tr>
+								<tr th:if="${users.empty}">
+									<td class="empty-results" colspan="5">No users found.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="pagination-bar">
+						<p class="result-count"
+						   th:if="${!users.empty}"
+						   th:text="|Showing ${users.number * users.size + 1}-${users.number * users.size + users.numberOfElements} of ${users.totalElements} users|">
+							Showing users
+						</p>
+						<p class="result-count" th:if="${users.empty}">0 users</p>
+						<nav class="page-navigation" th:if="${users.totalPages > 1}" aria-label="User results pages">
+							<a class="page-link"
+							   th:classappend="${users.first} ? ' disabled' : ''"
+							   th:href="${users.first} ? null : @{/users(search=${search}, page=${users.number - 1})}">Previous</a>
+							<a class="page-link"
+							   th:each="pageNumber : ${#numbers.sequence(0, users.totalPages - 1)}"
+							   th:classappend="${pageNumber == users.number} ? ' current' : ''"
+							   th:href="@{/users(search=${search}, page=${pageNumber})}"
+							   th:text="${pageNumber + 1}">1</a>
+							<a class="page-link"
+							   th:classappend="${users.last} ? ' disabled' : ''"
+							   th:href="${users.last} ? null : @{/users(search=${search}, page=${users.number + 1})}">Next</a>
+						</nav>
+					</div>
+				</section>
+			</main>
+		</div>
+	</div>
+	<script th:replace="~{fragments/layout :: scripts}"></script>
+</body>
+</html>
