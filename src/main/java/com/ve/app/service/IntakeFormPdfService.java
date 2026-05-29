@@ -298,7 +298,7 @@ public class IntakeFormPdfService {
 
 	private void addKeyValue(PdfPTable table, String label, String value) {
 		PdfPCell cell = new PdfPCell();
-		if (!"No".equalsIgnoreCase(value)) {
+		if (!value.isBlank() && !"No".equalsIgnoreCase(value)) {
 			cell.setBackgroundColor(LIGHT_GREEN);
 		}
 		cell.setBorderColor(BORDER);
