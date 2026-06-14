@@ -55,4 +55,10 @@
 		});
 		updateSaveVisibility();
 	});
+
+	document.querySelectorAll("[data-referral-month-select]").forEach(function (select) {
+		select.addEventListener("change", function () {
+			select.form.submit();
+		});
+	});
 }());

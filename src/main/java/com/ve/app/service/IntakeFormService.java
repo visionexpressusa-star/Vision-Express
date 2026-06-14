@@ -4,10 +4,12 @@ import com.ve.app.model.ChecklistItem;
 import com.ve.app.model.IntakeForm;
 import com.ve.app.model.LensRecommendation;
 import com.ve.app.model.Prescription;
+import com.ve.app.model.ReferralSource;
 import com.ve.app.repository.ChecklistItemRepository;
 import com.ve.app.repository.IntakeFormRepository;
 import com.ve.app.repository.LensRecommendationRepository;
 import com.ve.app.repository.PrescriptionRepository;
+import com.ve.app.repository.ReferralSourceRepository;
 import com.ve.app.web.form.CreateIntakeFormForm;
 import com.ve.app.web.form.CreatePrescriptionForm;
 import com.ve.app.web.view.IntakeFormListItem;
@@ -32,16 +34,19 @@ public class IntakeFormService {
 	private final ChecklistItemRepository checklistItemRepository;
 	private final PrescriptionRepository prescriptionRepository;
 	private final LensRecommendationRepository lensRecommendationRepository;
+	private final ReferralSourceRepository referralSourceRepository;
 
 	public IntakeFormService(
 			IntakeFormRepository intakeFormRepository,
 			ChecklistItemRepository checklistItemRepository,
 			PrescriptionRepository prescriptionRepository,
-			LensRecommendationRepository lensRecommendationRepository) {
+			LensRecommendationRepository lensRecommendationRepository,
+			ReferralSourceRepository referralSourceRepository) {
 		this.intakeFormRepository = intakeFormRepository;
 		this.checklistItemRepository = checklistItemRepository;
 		this.prescriptionRepository = prescriptionRepository;
 		this.lensRecommendationRepository = lensRecommendationRepository;
+		this.referralSourceRepository = referralSourceRepository;
 	}
 
 	@Transactional(readOnly = true)
@@ -54,6 +59,11 @@ public class IntakeFormService {
 	@Transactional(readOnly = true)
 	public List<ChecklistItem> findChecklistItems() {
 		return checklistItemRepository.findAllByOrderBySortNumberAsc();
+	}
+
+	@Transactional(readOnly = true)
+	public List<ReferralSource> findReferralSources() {
+		return referralSourceRepository.findAllByOrderByIdAsc();
 	}
 
 	@Transactional(readOnly = true)
@@ -92,6 +102,7 @@ public class IntakeFormService {
 		String vaRight = requiredVisualAcuity(form.getVaRight(), "Right");
 		String vaLeft = requiredVisualAcuity(form.getVaLeft(), "Left");
 		String vaBoth = requiredVisualAcuity(form.getVaBoth(), "Both");
+		ReferralSource referralSource = requiredReferralSource(form.getReferralSourceId());
 		List<ChecklistItem> checklistItems = findChecklistItems();
 		if (!form.getCheckedChecklistItemIds().containsAll(checklistItems.stream().map(ChecklistItem::getId).toList())) {
 			throw new IllegalArgumentException("All checklist items must be checked before saving.");
@@ -111,7 +122,7 @@ public class IntakeFormService {
 				vaLeft,
 				vaBoth,
 				nullIfBlank(form.getInsuranceName()),
-				nullIfBlank(form.getNotes()),
+				referralSource,
 				createdBy,
 				LocalDateTime.now()));
 	}
@@ -245,6 +256,14 @@ public class IntakeFormService {
 			throw new IllegalArgumentException("Visual acuity is required for " + eyeName + ".");
 		}
 		return value;
+	}
+
+	private ReferralSource requiredReferralSource(Long referralSourceId) {
+		if (referralSourceId == null) {
+			throw new IllegalArgumentException("Referral source is required.");
+		}
+		return referralSourceRepository.findById(referralSourceId)
+				.orElseThrow(() -> new IllegalArgumentException("Please select a valid referral source."));
 	}
 
 	private String requiredText(String input, String message) {

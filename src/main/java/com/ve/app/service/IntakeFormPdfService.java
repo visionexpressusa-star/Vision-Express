@@ -109,11 +109,8 @@ public class IntakeFormPdfService {
 				"Aided", yesNo(intakeForm.isAided()),
 				"Right (OD)", value(intakeForm.getVaRight()),
 				"Left (OS)", value(intakeForm.getVaLeft()),
-				"Both (OU)", value(intakeForm.getVaBoth()),
-				"", "");
-		if (hasText(intakeForm.getNotes())) {
-			addWideKeyValue(table, "Notes from staff", value(intakeForm.getNotes()));
-		}
+				"Both (OU)", value(intakeForm.getVaBoth()));
+		addWideKeyValue(table, "Referral Source", value(intakeForm.getReferralSource().getName()));
 		section.addCell(contentCell(table));
 		document.add(section);
 	}
@@ -139,8 +136,8 @@ public class IntakeFormPdfService {
 		table.setSpacingBefore(6);
 
 		PdfPCell prescribed = plainCell();
-		Paragraph by = new Paragraph("Prescribed By: " + value(prescribedBy), prescribedFont);
-		Paragraph on = new Paragraph("Prescribed On: " + (prescribedOn == null ? "-" : DATE_FORMATTER.format(prescribedOn)), prescribedFont);
+		Paragraph by = new Paragraph("Refraction By: " + value(prescribedBy), prescribedFont);
+		Paragraph on = new Paragraph("Refraction On: " + (prescribedOn == null ? "-" : DATE_FORMATTER.format(prescribedOn)), prescribedFont);
 		prescribed.addElement(by);
 		prescribed.addElement(on);
 		table.addCell(prescribed);

@@ -31,7 +31,7 @@ public class CreateIntakeFormForm {
 
 	private String vaBoth = "";
 
-	private String notes = "";
+	private Long referralSourceId;
 
 	private List<Long> checkedChecklistItemIds = new ArrayList<>();
 
@@ -139,12 +139,12 @@ public class CreateIntakeFormForm {
 		this.vaBoth = vaBoth;
 	}
 
-	public String getNotes() {
-		return notes;
+	public Long getReferralSourceId() {
+		return referralSourceId;
 	}
 
-	public void setNotes(String notes) {
-		this.notes = notes;
+	public void setReferralSourceId(Long referralSourceId) {
+		this.referralSourceId = referralSourceId;
 	}
 
 	public List<Long> getCheckedChecklistItemIds() {

@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -56,8 +58,9 @@ public class IntakeForm {
 	@Column(name = "insurance_name", columnDefinition = "TEXT")
 	private String insuranceName;
 
-	@Column(columnDefinition = "TEXT")
-	private String notes;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "referral_source_id", nullable = false)
+	private ReferralSource referralSource;
 
 	@Column(name = "created_by", columnDefinition = "TEXT")
 	private String createdBy;
@@ -82,7 +85,7 @@ public class IntakeForm {
 			String vaLeft,
 			String vaBoth,
 			String insuranceName,
-			String notes,
+			ReferralSource referralSource,
 			String createdBy,
 			LocalDateTime createdOn) {
 		this.accountId = accountId;
@@ -98,7 +101,7 @@ public class IntakeForm {
 		this.vaLeft = vaLeft;
 		this.vaBoth = vaBoth;
 		this.insuranceName = insuranceName;
-		this.notes = notes;
+		this.referralSource = referralSource;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
 	}
@@ -159,8 +162,8 @@ public class IntakeForm {
 		return insuranceName;
 	}
 
-	public String getNotes() {
-		return notes;
+	public ReferralSource getReferralSource() {
+		return referralSource;
 	}
 
 	public String getCreatedBy() {

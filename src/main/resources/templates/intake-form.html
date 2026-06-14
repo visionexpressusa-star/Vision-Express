@@ -37,7 +37,7 @@
 									<th scope="col">Patient Name</th>
 									<th scope="col">Created By</th>
 									<th scope="col">Created On</th>
-									<th scope="col">Prescribed By</th>
+									<th scope="col">Referection By</th>
 									<th scope="col" class="actions-heading">Actions</th>
 								</tr>
 							</thead>
@@ -53,7 +53,7 @@
 										   th:href="@{/intake-form/{id}/view(id=${intakeForm.id})}">View</a>
 										<a class="table-action prescription"
 										   th:if="${grantedAuthorities.contains('ROLE_ADMIN') or grantedAuthorities.contains('provide_prescription')}"
-										   th:href="@{/intake-form/{id}/prescription/create(id=${intakeForm.id})}">Prescription</a>
+										   th:href="@{/intake-form/{id}/prescription/create(id=${intakeForm.id})}">Refraction</a>
 									</td>
 								</tr>
 								<tr th:if="${intakeForms.empty}">

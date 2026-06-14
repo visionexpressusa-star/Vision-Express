@@ -85,9 +85,9 @@
 							</div>
 						</div>
 
-						<div class="summary-section" th:if="${!#strings.isEmpty(intakeForm.notes)}">
-							<span class="summary-section-title">Notes from staff</span>
-							<p class="summary-notes" th:text="${intakeForm.notes}">Staff notes</p>
+						<div class="summary-section">
+							<span class="summary-section-title">How did you hear from us?</span>
+							<p class="summary-referral-source" th:text="${intakeForm.referralSource.name}">Referral source</p>
 						</div>
 					</div>
 
@@ -101,11 +101,11 @@
 							</div>
 							<div class="prescription-meta">
 								<div>
-									<span class="summary-label">Prescribed By:</span>
+									<span class="summary-label">Refraction By:</span>
 									<span class="summary-value" th:text="${prescribedBy}">Staff Name</span>
 								</div>
 								<div>
-									<span class="summary-label">Prescribed On:</span>
+									<span class="summary-label">Refraction On:</span>
 									<span class="summary-value" th:text="${prescribedOn == null ? '-' : #temporals.format(prescribedOn, 'MM/dd/yyyy')}">05/27/2026</span>
 								</div>
 							</div>

@@ -616,7 +616,7 @@ body {
 	flex: 0 1 auto;
 }
 
-.intake-notes {
+.intake-referral-source {
 	width: 100%;
 }
 
@@ -705,7 +705,7 @@ body {
 	gap: 8px;
 }
 
-.summary-notes {
+.summary-referral-source {
 	min-height: 42px;
 	margin: 0;
 	padding: 8px 10px;
@@ -979,6 +979,188 @@ body {
 	gap: 12px;
 }
 
+.referral-report-page {
+	min-height: calc(100vh - 104px);
+	padding: 28px;
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	background: var(--surface);
+}
+
+.referral-report-heading {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 26px;
+}
+
+.referral-report-heading h1 {
+	margin: 0;
+	font-size: 26px;
+	font-weight: 600;
+}
+
+.referral-month-filter {
+	width: min(260px, 100%);
+}
+
+.referral-month-filter label {
+	display: block;
+	margin-bottom: 7px;
+	color: var(--muted);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.referral-month-filter .form-control {
+	height: 44px;
+	border-color: var(--border);
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.referral-month-filter .form-control:focus {
+	border-color: var(--logo-green);
+	box-shadow: 0 0 0 0.2rem rgba(91, 163, 86, 0.18);
+}
+
+.referral-report-grid {
+	display: grid;
+	grid-template-columns: minmax(300px, 0.9fr) minmax(360px, 1.1fr);
+	gap: 20px;
+}
+
+.referral-report-panel {
+	min-height: 420px;
+	padding: 20px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	background: var(--surface);
+}
+
+.referral-panel-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 16px;
+	padding-bottom: 14px;
+	border-bottom: 1px solid var(--border);
+}
+
+.referral-panel-heading h2 {
+	margin: 0;
+	font-size: 17px;
+	font-weight: 600;
+}
+
+.referral-total {
+	color: var(--muted);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.referral-source-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.referral-source-list li {
+	min-height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	padding: 10px 4px;
+	border-bottom: 1px solid var(--border);
+}
+
+.referral-source-list li:last-child {
+	border-bottom: 0;
+}
+
+.referral-source-name {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+	font-size: 14px;
+}
+
+.referral-source-list strong {
+	min-width: 34px;
+	padding: 4px 7px;
+	border-radius: 6px;
+	color: var(--navy);
+	background: #edf3ea;
+	font-size: 14px;
+	text-align: center;
+}
+
+.referral-color-swatch {
+	width: 12px;
+	height: 12px;
+	flex: 0 0 auto;
+	border-radius: 3px;
+}
+
+.referral-chart-panel {
+	display: flex;
+	flex-direction: column;
+}
+
+.referral-chart-area {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 18px;
+	padding: 12px;
+}
+
+.referral-pie-chart {
+	position: relative;
+	width: min(300px, 75vw);
+	aspect-ratio: 1;
+	flex: 0 0 auto;
+	border-radius: 50%;
+}
+
+.referral-chart-center {
+	position: absolute;
+	inset: 29%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	border: 1px solid var(--border);
+	border-radius: 50%;
+	background: var(--surface);
+	text-align: center;
+}
+
+.referral-chart-center strong {
+	font-size: 30px;
+	font-weight: 700;
+}
+
+.referral-chart-center span {
+	color: var(--muted);
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.referral-empty-chart {
+	margin: 0;
+	color: var(--muted);
+	font-size: 14px;
+	text-align: center;
+}
+
 .cancel-button {
 	height: 44px;
 	display: inline-flex;
@@ -1223,6 +1405,15 @@ body {
 		min-height: calc(100vh - 94px);
 		padding: 20px;
 	}
+
+	.referral-report-page {
+		min-height: calc(100vh - 94px);
+		padding: 20px;
+	}
+
+	.referral-report-grid {
+		grid-template-columns: 1fr;
+	}
 }
 
 @media (max-width: 575.98px) {
@@ -1270,6 +1461,25 @@ body {
 	.user-create-page {
 		min-height: calc(100vh - 86px);
 		padding: 18px 12px;
+	}
+
+	.referral-report-page {
+		min-height: calc(100vh - 86px);
+		padding: 18px 12px;
+	}
+
+	.referral-report-heading {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.referral-month-filter {
+		width: 100%;
+	}
+
+	.referral-report-panel {
+		min-height: auto;
+		padding: 16px;
 	}
 
 	.intake-field-row {

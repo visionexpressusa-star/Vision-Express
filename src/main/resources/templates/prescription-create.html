@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Prescription')}"></head>
+<head th:replace="~{fragments/layout :: head('Refraction')}"></head>
 <body>
 	<div class="admin-layout">
 		<aside th:replace="~{fragments/layout :: sidebar('intake-form')}"></aside>
@@ -10,12 +10,12 @@
 			<main class="content">
 				<section class="user-create-page" aria-labelledby="prescription-heading">
 					<div class="page-heading">
-						<h1 id="prescription-heading">Prescription</h1>
+						<h1 id="prescription-heading">Refraction</h1>
 						<a class="back-link" th:href="@{/intake-form}">Back to intake forms</a>
 					</div>
 
 					<div class="users-message success" th:if="${param.saved}">
-						Prescription saved successfully.
+						Refraction saved successfully.
 					</div>
 
 					<div class="users-message error" th:if="${formError}" th:text="${formError}">
@@ -89,9 +89,9 @@
 							</div>
 						</div>
 
-						<div class="summary-section" th:if="${!#strings.isEmpty(intakeForm.notes)}">
-							<span class="summary-section-title">Notes from staff</span>
-							<p class="summary-notes" th:text="${intakeForm.notes}">Staff notes</p>
+						<div class="summary-section">
+							<span class="summary-section-title">Referral Source</span>
+							<p class="summary-referral-source" th:text="${intakeForm.referralSource.name}">Referral source</p>
 						</div>
 					</div>
 
@@ -114,11 +114,11 @@
 							</div>
 							<div class="prescription-meta">
 								<div>
-									<span class="summary-label">Prescribed By:</span>
+									<span class="summary-label">Refraction By:</span>
 									<span class="summary-value" th:text="${prescribedBy}">Staff Name</span>
 								</div>
 								<div>
-									<span class="summary-label">Prescribed On:</span>
+									<span class="summary-label">Refraction On:</span>
 									<span class="summary-value" th:text="${#temporals.format(prescribedOn, 'MM/dd/yyyy')}">05/27/2026</span>
 								</div>
 							</div>

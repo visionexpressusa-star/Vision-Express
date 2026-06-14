@@ -40,6 +40,14 @@
 				Intake Form
 			</a>
 			<a class="menu-link"
+			   th:href="@{/referral-source}"
+			   th:classappend="${activePage == 'referral-source'} ? ' active' : ''">
+				<span class="menu-icon" aria-hidden="true">
+					<svg viewBox="0 0 24 24"><path d="M12 3v9h9A9 9 0 1 1 12 3zm3 0a6 6 0 0 1 6 6h-6z"/></svg>
+				</span>
+				Referral Source
+			</a>
+			<a class="menu-link"
 			   th:if="${grantedAuthorities.contains('ROLE_ADMIN') or grantedAuthorities.contains('inventory_check')}"
 			   th:href="@{/inventory-tracking}"
 			   th:classappend="${activePage == 'inventory-tracking'} ? ' active' : ''">

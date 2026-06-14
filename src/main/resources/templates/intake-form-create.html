@@ -153,12 +153,17 @@
 							</div>
 						</fieldset>
 
-						<div class="field-group intake-notes">
-							<label for="intake-notes">Notes from staff</label>
-							<input id="intake-notes"
-								   class="form-control"
-								   type="text"
-								   th:field="*{notes}">
+						<div class="field-group intake-referral-source">
+							<label for="referral-source">How did you hear about us?</label>
+							<select id="referral-source"
+									class="form-control"
+									th:field="*{referralSourceId}"
+									required>
+								<option value="">Select one</option>
+								<option th:each="referralSource : ${referralSources}"
+										th:value="${referralSource.id}"
+										th:text="${referralSource.name}">Referral source</option>
+							</select>
 						</div>
 
 						<div class="form-actions">

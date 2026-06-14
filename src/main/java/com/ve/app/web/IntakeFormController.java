@@ -131,6 +131,7 @@ public class IntakeFormController {
 	private void populateCreateForm(Model model, CreateIntakeFormForm form) {
 		model.addAttribute("createIntakeFormForm", form);
 		model.addAttribute("checklistItems", intakeFormService.findChecklistItems());
+		model.addAttribute("referralSources", intakeFormService.findReferralSources());
 	}
 
 	private void populatePrescriptionForm(Model model, long intakeFormId, CreatePrescriptionForm form, Principal principal) {
