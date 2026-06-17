@@ -18,9 +18,11 @@ public class ReferralSourceController {
 
 	@GetMapping("/referral-source")
 	public String referralSourceReport(
+			@RequestParam(required = false) String period,
 			@RequestParam(required = false) String month,
+			@RequestParam(required = false) String year,
 			Model model) {
-		ReferralSourceReport report = referralSourceReportService.createReport(month);
+		ReferralSourceReport report = referralSourceReportService.createReport(period, month, year);
 		model.addAttribute("report", report);
 		return "referral-source";
 	}

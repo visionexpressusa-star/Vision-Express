@@ -205,7 +205,7 @@ public class IntakeFormPdfService {
 		addRecommendationLine(table, "Lens Treatment", selectedValues(
 				recommended(form.isScUvAr(), "SC/UV/AR"),
 				recommended(form.isBlueShield(), "Blue Shield Protection")));
-		addRecommendationLine(table, "Transition", selectedValues(recommended(form.isTransition(), "Yes/No")));
+		addRecommendationLine(table, "Transition", yesNo(form.isTransition()));
 		section.addCell(contentCell(table));
 		document.add(section);
 	}

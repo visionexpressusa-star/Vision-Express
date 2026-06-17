@@ -56,9 +56,9 @@
 		updateSaveVisibility();
 	});
 
-	document.querySelectorAll("[data-referral-month-select]").forEach(function (select) {
-		select.addEventListener("change", function () {
-			select.form.submit();
+	document.querySelectorAll("[data-referral-filter-control]").forEach(function (control) {
+		control.addEventListener("change", function () {
+			control.form.submit();
 		});
 	});
 }());

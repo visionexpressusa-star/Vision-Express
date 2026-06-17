@@ -11,23 +11,57 @@
 				<section class="referral-report-page" aria-labelledby="referral-report-heading">
 					<div class="referral-report-heading">
 						<h1 id="referral-report-heading">Referral Source</h1>
-						<form class="referral-month-filter" th:action="@{/referral-source}" method="get">
-							<label for="report-month">Month</label>
-							<select id="report-month"
-									class="form-control"
-									name="month"
-									data-referral-month-select>
-								<option th:each="availableMonth : ${report.availableMonths}"
-										th:value="${availableMonth.value}"
-										th:text="${availableMonth.label}"
-										th:selected="${availableMonth.value == report.selectedMonth}">
-									June, 2026
-								</option>
-							</select>
+						<form class="referral-report-filter" th:action="@{/referral-source}" method="get">
+							<div class="referral-period-options" role="radiogroup" aria-label="Report period">
+								<label>
+									<input type="radio"
+										   name="period"
+										   value="monthly"
+										   th:checked="${report.selectedPeriod == 'monthly'}"
+										   data-referral-filter-control>
+									<span>Monthly</span>
+								</label>
+								<label>
+									<input type="radio"
+										   name="period"
+										   value="yearly"
+										   th:checked="${report.selectedPeriod == 'yearly'}"
+										   data-referral-filter-control>
+									<span>Yearly</span>
+								</label>
+							</div>
+							<div class="referral-filter-field" th:if="${report.selectedPeriod == 'monthly'}">
+								<label for="report-month">Month</label>
+								<select id="report-month"
+										class="form-control"
+										name="month"
+										data-referral-filter-control>
+									<option th:each="availableMonth : ${report.availableMonths}"
+											th:value="${availableMonth.value}"
+											th:text="${availableMonth.label}"
+											th:selected="${availableMonth.value == report.selectedMonth}">
+										June, 2026
+									</option>
+								</select>
+							</div>
+							<div class="referral-filter-field" th:if="${report.selectedPeriod == 'yearly'}">
+								<label for="report-year">Year</label>
+								<select id="report-year"
+										class="form-control"
+										name="year"
+										data-referral-filter-control>
+									<option th:each="availableYear : ${report.availableYears}"
+											th:value="${availableYear}"
+											th:text="${availableYear}"
+											th:selected="${availableYear == report.selectedYear}">
+										2026
+									</option>
+								</select>
+							</div>
 						</form>
 					</div>
 
-					<div class="referral-report-grid">
+					<div class="referral-report-grid" th:if="${report.selectedPeriod == 'monthly'}">
 						<section class="referral-report-panel" aria-labelledby="referral-counts-heading">
 							<div class="referral-panel-heading">
 								<h2 id="referral-counts-heading">Referral Sources</h2>
@@ -66,6 +100,32 @@
 							</div>
 						</section>
 					</div>
+
+					<section class="referral-report-panel referral-yearly-panel"
+							 th:if="${report.selectedPeriod == 'yearly'}"
+							 aria-labelledby="referral-yearly-heading">
+						<div class="referral-panel-heading">
+							<h2 id="referral-yearly-heading" th:text="|Monthly Intake Forms - ${report.selectedYear}|">Monthly Intake Forms</h2>
+							<span class="referral-total" th:text="|${report.yearTotal} total|">0 total</span>
+						</div>
+						<div class="referral-yearly-chart" th:if="${report.yearTotal > 0}">
+							<div class="referral-yearly-bar"
+								 th:each="month : ${report.yearMonths}"
+								 th:attr="title=${month.tooltip}, aria-label=${month.tooltip}"
+								 role="img">
+								<div class="referral-yearly-bar-track">
+									<div class="referral-yearly-bar-fill"
+										 th:style="|height: ${month.heightPercent}%;|">
+										<span th:text="${month.total}">0</span>
+									</div>
+								</div>
+								<span class="referral-yearly-month" th:text="${month.monthLabel}">Jan</span>
+							</div>
+						</div>
+						<p class="referral-empty-chart" th:if="${report.yearTotal == 0}">
+							No referrals recorded for this year.
+						</p>
+					</section>
 				</section>
 			</main>
 		</div>

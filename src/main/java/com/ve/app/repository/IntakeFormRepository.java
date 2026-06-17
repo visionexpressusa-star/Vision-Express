@@ -21,6 +21,14 @@ public interface IntakeFormRepository extends JpaRepository<IntakeForm, Long> {
 	List<Object[]> findDistinctCreatedMonths();
 
 	@Query("""
+			SELECT DISTINCT YEAR(i.createdOn)
+			FROM IntakeForm i
+			WHERE i.createdOn IS NOT NULL
+			ORDER BY YEAR(i.createdOn) DESC
+			""")
+	List<Integer> findDistinctCreatedYears();
+
+	@Query("""
 			SELECT i.referralSource.id, COUNT(i)
 			FROM IntakeForm i
 			WHERE i.createdOn >= :start
@@ -28,6 +36,18 @@ public interface IntakeFormRepository extends JpaRepository<IntakeForm, Long> {
 			GROUP BY i.referralSource.id
 			""")
 	List<Object[]> countByReferralSourceForPeriod(
+			@Param("start") LocalDateTime start,
+			@Param("end") LocalDateTime end);
+
+	@Query("""
+			SELECT MONTH(i.createdOn), i.referralSource.id, COUNT(i)
+			FROM IntakeForm i
+			WHERE i.createdOn >= :start
+			  AND i.createdOn < :end
+			GROUP BY MONTH(i.createdOn), i.referralSource.id
+			ORDER BY MONTH(i.createdOn)
+			""")
+	List<Object[]> countByReferralSourceByMonthForPeriod(
 			@Param("start") LocalDateTime start,
 			@Param("end") LocalDateTime end);
 
