@@ -979,6 +979,156 @@ body {
 	gap: 12px;
 }
 
+.field-error {
+	margin-top: 6px;
+	color: #9c2719;
+	font-size: 13px;
+}
+
+.optical-page {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+
+.optical-config-form,
+.optical-estimate-form {
+	display: flex;
+	flex-direction: column;
+	gap: 22px;
+}
+
+.optical-config-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 20px;
+}
+
+.optical-fieldset {
+	margin: 0;
+	padding: 18px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	background: var(--surface);
+}
+
+.optical-fieldset legend {
+	float: none;
+	width: auto;
+	margin: 0;
+	padding: 0 7px;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.optical-discount-list {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(120px, 1fr));
+	gap: 16px;
+}
+
+.optical-inline-field label {
+	color: var(--muted);
+	font-size: 13px;
+}
+
+.optical-table {
+	min-width: 640px;
+}
+
+.optical-table .form-control {
+	height: 40px;
+	border-color: var(--border);
+	font-size: 14px;
+}
+
+.optical-add-row {
+	margin-top: 14px;
+	color: var(--navy);
+}
+
+.optical-estimate-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(310px, 0.42fr);
+	gap: 22px;
+	align-items: start;
+}
+
+.optical-choice-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 18px 28px;
+	margin-top: 4px;
+}
+
+.optical-insurance-discount {
+	width: min(320px, 100%);
+	margin-top: 16px;
+}
+
+.optical-purchase-grid {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	margin-bottom: 18px;
+}
+
+.optical-dependent-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.optical-wide-field {
+	grid-column: 1 / -1;
+}
+
+.optical-summary {
+	padding: 18px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	background: var(--surface);
+}
+
+.optical-summary h2 {
+	margin: 0 0 16px;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.optical-summary-table {
+	min-width: 0;
+}
+
+.optical-summary-table th,
+.optical-summary-table td {
+	padding: 13px 14px;
+}
+
+.optical-summary-table th {
+	width: 68%;
+	color: var(--heading);
+	background: transparent;
+}
+
+.optical-summary-table td {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.optical-total-row th,
+.optical-total-row td {
+	color: var(--navy);
+	background: #edf3ea;
+	font-weight: 700;
+}
+
+.optical-empty-summary {
+	height: auto;
+	padding: 28px 12px;
+	border: 1px dashed var(--border);
+	border-radius: 8px;
+	background: #f8faf7;
+}
+
 .referral-report-page {
 	min-height: calc(100vh - 104px);
 	padding: 28px;
@@ -1499,6 +1649,17 @@ body {
 	.referral-report-grid {
 		grid-template-columns: 1fr;
 	}
+
+	.optical-config-grid,
+	.optical-estimate-layout,
+	.optical-dependent-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.optical-discount-list,
+	.optical-purchase-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 }
 
 @media (max-width: 575.98px) {
@@ -1643,5 +1804,11 @@ body {
 
 	.login-card {
 		padding: 28px 22px;
+	}
+
+	.optical-config-grid,
+	.optical-discount-list,
+	.optical-purchase-grid {
+		grid-template-columns: 1fr;
 	}
 }

@@ -40,6 +40,7 @@ public class SecurityConfig {
 						.requestMatchers("/intake-form/*/prescription/**").hasAnyAuthority("ROLE_ADMIN", "provide_prescription")
 						.requestMatchers("/intake-form", "/intake-form/**").hasAnyAuthority("ROLE_ADMIN", "intake_form")
 						.requestMatchers("/inventory-tracking").hasAnyAuthority("ROLE_ADMIN", "inventory_check")
+						.requestMatchers("/optical-store/config", "/optical-store/config/**").hasAnyAuthority("ROLE_ADMIN", "optical_store_config")
 						.anyRequest().authenticated())
 				.formLogin(form -> form
 						.loginPage("/login")
