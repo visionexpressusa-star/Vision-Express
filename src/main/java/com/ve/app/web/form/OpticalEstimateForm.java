@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class OpticalEstimateForm {
 
-	private Boolean hasInsurance;
+	private Boolean hasInsurance = false;
 	private BigDecimal insuranceDiscount;
 	private boolean buyingEyeExam;
 	private boolean buyingFrame;

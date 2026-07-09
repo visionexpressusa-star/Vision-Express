@@ -9,6 +9,7 @@ import com.ve.app.repository.OpticalStoreConfigRepository;
 import com.ve.app.web.form.FrameDiscountOptionForm;
 import com.ve.app.web.form.LensOptionChargeForm;
 import com.ve.app.web.form.LensPriceForm;
+import com.ve.app.web.form.LensProtectionCoatingForm;
 import com.ve.app.web.form.OpticalStoreConfigForm;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -47,6 +48,9 @@ public class OpticalStoreConfigService {
 		form.setLensOptionCharges(current.getLensOptionCharges().stream()
 				.map(option -> new LensOptionChargeForm(option.name(), option.charge()))
 				.toList());
+		form.setLensProtectionCoatings(current.getLensProtectionCoatings().stream()
+				.map(coating -> new LensProtectionCoatingForm(coating.name(), coating.price()))
+				.toList());
 		form.setLensPrices(current.getLensPrices().stream()
 				.map(lens -> new LensPriceForm(lens.name(), lens.price()))
 				.toList());
@@ -75,9 +79,14 @@ public class OpticalStoreConfigService {
 				.filter(lens -> lens.getName() != null && !lens.getName().isBlank())
 				.map(lens -> new LensPrice(lens.getName().trim(), moneyOrZero(lens.getPrice())))
 				.toList();
+		List<LensProtectionCoating> lensProtectionCoatings = nullToList(form.getLensProtectionCoatings()).stream()
+				.filter(coating -> coating.getName() != null && !coating.getName().isBlank())
+				.map(coating -> new LensProtectionCoating(coating.getName().trim(), moneyOrZero(coating.getPrice())))
+				.toList();
 
 		replaceFrameDiscountOptions(entity, frameDiscounts);
 		replaceLensOptionCharges(entity, lensOptionCharges);
+		replaceLensProtectionCoatings(entity, lensProtectionCoatings);
 		replaceLensPrices(entity, lensPrices);
 		configRepository.save(entity);
 	}

@@ -368,4 +368,36 @@
 			nameInput.focus();
 		});
 	});
+
+	document.querySelectorAll("[data-add-coating-row]").forEach(function (button) {
+		button.addEventListener("click", function () {
+			var table = document.querySelector("[data-lens-coating-table]");
+			if (!table || !table.tBodies.length) {
+				return;
+			}
+			var body = table.tBodies[0];
+			var index = body.rows.length;
+			var row = body.insertRow();
+			var nameCell = row.insertCell();
+			var priceCell = row.insertCell();
+
+			var nameInput = document.createElement("input");
+			nameInput.className = "form-control";
+			nameInput.type = "text";
+			nameInput.name = "lensProtectionCoatings[" + index + "].name";
+			nameInput.id = "lensProtectionCoatings" + index + ".name";
+
+			var priceInput = document.createElement("input");
+			priceInput.className = "form-control";
+			priceInput.type = "number";
+			priceInput.step = "0.01";
+			priceInput.min = "0";
+			priceInput.name = "lensProtectionCoatings[" + index + "].price";
+			priceInput.id = "lensProtectionCoatings" + index + ".price";
+
+			nameCell.appendChild(nameInput);
+			priceCell.appendChild(priceInput);
+			nameInput.focus();
+		});
+	});
 }());

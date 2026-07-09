@@ -4,6 +4,7 @@ import com.ve.app.service.OpticalStoreConfigService;
 import com.ve.app.web.form.FrameDiscountOptionForm;
 import com.ve.app.web.form.LensOptionChargeForm;
 import com.ve.app.web.form.LensPriceForm;
+import com.ve.app.web.form.LensProtectionCoatingForm;
 import com.ve.app.web.form.OpticalStoreConfigForm;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -66,6 +67,21 @@ public class OpticalStoreConfigController {
 		for (int index = 0; index < lensOptionCharges.size(); index++) {
 			LensOptionChargeForm option = lensOptionCharges.get(index);
 			rejectNegative(bindingResult, "lensOptionCharges[" + index + "].charge", option.getCharge(), option.getName() + " charge cannot be negative.");
+		}
+		List<LensProtectionCoatingForm> lensProtectionCoatings = nullToList(form.getLensProtectionCoatings());
+		for (int index = 0; index < lensProtectionCoatings.size(); index++) {
+			LensProtectionCoatingForm coating = lensProtectionCoatings.get(index);
+			boolean hasName = coating.getName() != null && !coating.getName().isBlank();
+			boolean hasPrice = coating.getPrice() != null;
+			if (hasName || hasPrice) {
+				if (!hasName) {
+					bindingResult.rejectValue("lensProtectionCoatings[" + index + "].name", "coating.name.required", "Coating name is required.");
+				}
+				if (!hasPrice) {
+					bindingResult.rejectValue("lensProtectionCoatings[" + index + "].price", "coating.price.required", "Coating price is required.");
+				}
+				rejectNegative(bindingResult, "lensProtectionCoatings[" + index + "].price", coating.getPrice(), "Coating price cannot be negative.");
+			}
 		}
 		List<LensPriceForm> lensPrices = nullToList(form.getLensPrices());
 		for (int index = 0; index < lensPrices.size(); index++) {
