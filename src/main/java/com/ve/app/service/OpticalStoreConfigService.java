@@ -3,6 +3,7 @@ package com.ve.app.service;
 import com.ve.app.model.OpticalFrameDiscountOption;
 import com.ve.app.model.OpticalLensOptionCharge;
 import com.ve.app.model.OpticalLensPrice;
+import com.ve.app.model.OpticalLensProtectionCoating;
 import com.ve.app.model.OpticalStoreConfigEntity;
 import com.ve.app.repository.OpticalStoreConfigRepository;
 import com.ve.app.web.form.FrameDiscountOptionForm;
@@ -89,6 +90,11 @@ public class OpticalStoreConfigService {
 				new LensOptionCharge("Rimless", new BigDecimal("49.99")),
 				new LensOptionCharge("Extra large frame", new BigDecimal("39.99")),
 				new LensOptionCharge("Safety lens", new BigDecimal("49.99"))));
+		defaultConfig.setLensProtectionCoatings(List.of(
+				new LensProtectionCoating("SV - UV/AR/Anti-Scratch", new BigDecimal("79.99")),
+				new LensProtectionCoating("BF/P - UV/AR/Anti-Scratch", new BigDecimal("89.99")),
+				new LensProtectionCoating("SV - Blue Shield + UV/AR/Anti-Scratch", new BigDecimal("109.99")),
+				new LensProtectionCoating("BF/P - Blue Shield + UV/AR/Anti-Scratch", new BigDecimal("149.99"))));
 		defaultConfig.setLensPrices(List.of(
 				new LensPrice("Single Vision - CR39 Plastic", new BigDecimal("219.99")),
 				new LensPrice("Single Vision - Poly HD", new BigDecimal("249.99")),
@@ -132,6 +138,7 @@ public class OpticalStoreConfigService {
 					defaultConfig.getPofCharge());
 			replaceFrameDiscountOptions(entity, defaultConfig.getFrameDiscountOptions());
 			replaceLensOptionCharges(entity, defaultConfig.getLensOptionCharges());
+			replaceLensProtectionCoatings(entity, defaultConfig.getLensProtectionCoatings());
 			replaceLensPrices(entity, defaultConfig.getLensPrices());
 			return configRepository.save(entity);
 		});
@@ -152,6 +159,9 @@ public class OpticalStoreConfigService {
 				.toList());
 		config.setLensPrices(entity.getLensPrices().stream()
 				.map(lens -> new LensPrice(lens.getName(), lens.getPrice()))
+				.toList());
+		config.setLensProtectionCoatings(entity.getLensProtectionCoatings().stream()
+				.map(coating -> new LensProtectionCoating(coating.getName(), coating.getPrice()))
 				.toList());
 		return config;
 	}
@@ -176,6 +186,14 @@ public class OpticalStoreConfigService {
 		for (int index = 0; index < prices.size(); index++) {
 			LensPrice price = prices.get(index);
 			entity.getLensPrices().add(new OpticalLensPrice(entity, index + 1, price.name(), price.price()));
+		}
+	}
+
+	private void replaceLensProtectionCoatings(OpticalStoreConfigEntity entity, List<LensProtectionCoating> coatings) {
+		entity.getLensProtectionCoatings().clear();
+		for (int index = 0; index < coatings.size(); index++) {
+			LensProtectionCoating coating = coatings.get(index);
+			entity.getLensProtectionCoatings().add(new OpticalLensProtectionCoating(entity, index + 1, coating.name(), coating.price()));
 		}
 	}
 

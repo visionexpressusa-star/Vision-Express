@@ -14,6 +14,7 @@ public class OpticalStoreConfig {
 	private List<BigDecimal> frameDiscountOptions = new ArrayList<>();
 	private List<LensOptionCharge> lensOptionCharges = new ArrayList<>();
 	private List<LensPrice> lensPrices = new ArrayList<>();
+	private List<LensProtectionCoating> lensProtectionCoatings = new ArrayList<>();
 
 	public BigDecimal getEyeExamPrice() {
 		return eyeExamPrice;
@@ -77,5 +78,13 @@ public class OpticalStoreConfig {
 
 	public void setLensPrices(List<LensPrice> lensPrices) {
 		this.lensPrices = lensPrices;
+	}
+
+	public List<LensProtectionCoating> getLensProtectionCoatings() {
+		return lensProtectionCoatings;
+	}
+
+	public void setLensProtectionCoatings(List<LensProtectionCoating> lensProtectionCoatings) {
+		this.lensProtectionCoatings = lensProtectionCoatings;
 	}
 }

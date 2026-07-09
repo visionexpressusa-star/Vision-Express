@@ -14,6 +14,7 @@ public class OpticalEstimateForm {
 	private BigDecimal selectedFrameDiscountPercent;
 	private String lensTypeName;
 	private String lensOptionName;
+	private String lensProtectionCoatingName;
 	private String prescriptionSource;
 
 	public Boolean getHasInsurance() {
@@ -94,6 +95,14 @@ public class OpticalEstimateForm {
 
 	public void setLensOptionName(String lensOptionName) {
 		this.lensOptionName = lensOptionName;
+	}
+
+	public String getLensProtectionCoatingName() {
+		return lensProtectionCoatingName;
+	}
+
+	public void setLensProtectionCoatingName(String lensProtectionCoatingName) {
+		this.lensProtectionCoatingName = lensProtectionCoatingName;
 	}
 
 	public String getPrescriptionSource() {

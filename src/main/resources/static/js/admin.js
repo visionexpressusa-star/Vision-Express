@@ -66,12 +66,14 @@
 		var insuranceDiscount = form.querySelector("[data-insurance-discount]");
 		var frameFields = Array.prototype.slice.call(form.querySelectorAll("[data-frame-fields]"));
 		var lensTypeField = form.querySelector("[data-lens-type-field]");
+		var lensCoatingField = form.querySelector("[data-lens-coating-field]");
 		var lensOptionField = form.querySelector("[data-lens-option-field]");
 		var framePriceControl = form.querySelector("[name='framePrice']");
 		var frameDiscountControl = form.querySelector("[name='selectedFrameDiscountPercent']");
 		var insuranceDiscountControl = form.querySelector("[name='insuranceDiscount']");
 		var lensTypeControl = form.querySelector("[name='lensTypeName']");
 		var lensOptionControl = form.querySelector("[name='lensOptionName']");
+		var lensCoatingControl = form.querySelector("[name='lensProtectionCoatingName']");
 		var frameControl = form.querySelector("[data-frame-control]");
 		var pofControl = form.querySelector("[data-pof-control]");
 		var lensesControl = form.querySelector("[data-lenses-control]");
@@ -114,6 +116,11 @@
 		function selectedLensOptionCharge() {
 			var option = selectedOption(lensOptionControl);
 			return option ? moneyValue(option.getAttribute("data-charge")) : 0;
+		}
+
+		function selectedLensCoatingPrice() {
+			var option = selectedOption(lensCoatingControl);
+			return option ? moneyValue(option.getAttribute("data-price")) : 0;
 		}
 
 		function selectedPrescriptionSource() {
@@ -212,7 +219,9 @@
 			var lensPrice = hasLenses ? selectedLensPrice() : 0;
 			var lensTypeOption = selectedOption(lensTypeControl);
 			var lensOption = selectedOption(lensOptionControl);
+			var lensCoatingOption = selectedOption(lensCoatingControl);
 			var lensOptionCharge = completeGlasses ? selectedLensOptionCharge() : 0;
+			var lensCoatingPrice = hasLenses ? selectedLensCoatingPrice() : 0;
 
 			if (hasEyeExam) {
 				addLine(lines, "Eye exam", eyeExamPrice);
@@ -228,6 +237,9 @@
 			}
 			if (hasLenses && completeGlasses && lensOption && lensOption.value && lensOptionCharge > 0) {
 				addLine(lines, lensOption.value + " lens option", lensOptionCharge);
+			}
+			if (hasLenses && lensCoatingOption && lensCoatingOption.value && lensCoatingPrice > 0) {
+				addLine(lines, "Lens protection coating - " + lensCoatingOption.value, lensCoatingPrice);
 			}
 
 			if (hasInsurance) {
@@ -263,6 +275,7 @@
 				setVisible(field, hasFrame);
 			});
 			setVisible(lensTypeField, hasLenses);
+			setVisible(lensCoatingField, hasLenses);
 			setVisible(lensOptionField, completeGlasses);
 			calculateEstimate();
 		}

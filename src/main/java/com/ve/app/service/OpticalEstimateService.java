@@ -24,6 +24,8 @@ public class OpticalEstimateService {
 		BigDecimal lensPrice = selectedLens == null ? BigDecimal.ZERO : moneyOrZero(selectedLens.price());
 		LensOptionCharge selectedLensOption = findLensOption(form, config).orElse(null);
 		BigDecimal lensOptionCharge = selectedLensOption == null ? BigDecimal.ZERO : moneyOrZero(selectedLensOption.charge());
+		LensProtectionCoating selectedCoating = findLensProtectionCoating(form, config).orElse(null);
+		BigDecimal lensProtectionCoatingPrice = selectedCoating == null ? BigDecimal.ZERO : moneyOrZero(selectedCoating.price());
 
 		if (form.isBuyingEyeExam()) {
 			add(result, "Eye exam", eyeExamPrice);
@@ -42,6 +44,11 @@ public class OpticalEstimateService {
 				&& selectedLensOption != null
 				&& lensOptionCharge.compareTo(BigDecimal.ZERO) > 0) {
 			add(result, selectedLensOption.name() + " lens option", lensOptionCharge);
+		}
+		if (form.isBuyingLenses()
+				&& selectedCoating != null
+				&& lensProtectionCoatingPrice.compareTo(BigDecimal.ZERO) > 0) {
+			add(result, "Lens protection coating - " + selectedCoating.name(), lensProtectionCoatingPrice);
 		}
 
 		if (hasInsurance) {
@@ -102,6 +109,15 @@ public class OpticalEstimateService {
 		}
 		return config.getLensOptionCharges().stream()
 				.filter(option -> option.name().equals(form.getLensOptionName()))
+				.findFirst();
+	}
+
+	private Optional<LensProtectionCoating> findLensProtectionCoating(OpticalEstimateForm form, OpticalStoreConfig config) {
+		if (form.getLensProtectionCoatingName() == null || form.getLensProtectionCoatingName().isBlank()) {
+			return Optional.empty();
+		}
+		return config.getLensProtectionCoatings().stream()
+				.filter(coating -> coating.name().equals(form.getLensProtectionCoatingName()))
 				.findFirst();
 	}
 

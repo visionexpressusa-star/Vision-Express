@@ -99,6 +99,16 @@
 										</select>
 										<div class="field-error" th:errors="*{lensTypeName}"></div>
 									</div>
+									<div class="field-group optical-wide-field" data-lens-coating-field>
+										<label for="lens-protection-coating">Lens protection coating</label>
+										<select id="lens-protection-coating" class="form-control" th:field="*{lensProtectionCoatingName}">
+											<option value="" data-price="0">None</option>
+											<option th:each="coating : ${config.lensProtectionCoatings}"
+													th:value="${coating.name()}"
+													th:attr="data-price=${coating.price()}"
+													th:text="|${coating.name()} - $${#numbers.formatDecimal(coating.price(), 1, 'COMMA', 2, 'POINT')}|">Coating</option>
+										</select>
+									</div>
 									<div class="field-group optical-wide-field" data-lens-option-field>
 										<label for="lens-option">Lens option</label>
 										<select id="lens-option" class="form-control" th:field="*{lensOptionName}">
