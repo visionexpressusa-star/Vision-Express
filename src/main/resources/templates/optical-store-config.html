@@ -137,6 +137,39 @@
 						</fieldset>
 
 						<fieldset class="optical-fieldset">
+							<legend>Transition Options</legend>
+							<div class="users-table-wrapper">
+								<table class="users-table optical-table" data-lens-transition-table>
+									<thead>
+										<tr>
+											<th scope="col">Transition</th>
+											<th scope="col">Price</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="option, optionStat : *{lensTransitionOptions}">
+											<td>
+												<input class="form-control"
+													   type="text"
+													   th:field="*{lensTransitionOptions[__${optionStat.index}__].name}">
+												<div class="field-error" th:errors="*{lensTransitionOptions[__${optionStat.index}__].name}"></div>
+											</td>
+											<td>
+												<input class="form-control"
+													   type="number"
+													   step="0.01"
+													   min="0"
+													   th:field="*{lensTransitionOptions[__${optionStat.index}__].price}">
+												<div class="field-error" th:errors="*{lensTransitionOptions[__${optionStat.index}__].price}"></div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<button class="table-action edit optical-add-row" type="button" data-add-transition-row>Add transition row</button>
+						</fieldset>
+
+						<fieldset class="optical-fieldset">
 							<legend>Lens Price List</legend>
 							<div class="users-table-wrapper">
 								<table class="users-table optical-table" data-lens-price-table>

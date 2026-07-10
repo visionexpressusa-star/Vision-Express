@@ -15,6 +15,7 @@ public class OpticalEstimateForm {
 	private String lensTypeName;
 	private String lensOptionName;
 	private String lensProtectionCoatingName;
+	private String lensTransitionOptionName;
 	private String prescriptionSource;
 
 	public Boolean getHasInsurance() {
@@ -103,6 +104,14 @@ public class OpticalEstimateForm {
 
 	public void setLensProtectionCoatingName(String lensProtectionCoatingName) {
 		this.lensProtectionCoatingName = lensProtectionCoatingName;
+	}
+
+	public String getLensTransitionOptionName() {
+		return lensTransitionOptionName;
+	}
+
+	public void setLensTransitionOptionName(String lensTransitionOptionName) {
+		this.lensTransitionOptionName = lensTransitionOptionName;
 	}
 
 	public String getPrescriptionSource() {

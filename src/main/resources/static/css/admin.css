@@ -1067,8 +1067,19 @@ body {
 }
 
 .optical-purchase-grid {
-	grid-template-columns: repeat(4, minmax(0, 1fr));
+	grid-template-columns: 1fr;
+	gap: 12px;
 	margin-bottom: 18px;
+}
+
+.optical-purchase-row {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px 20px;
+}
+
+.optical-purchase-row-single {
+	grid-template-columns: minmax(0, 1fr);
 }
 
 .optical-dependent-grid {
@@ -1660,6 +1671,10 @@ body {
 	.optical-purchase-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
+
+	.optical-purchase-grid {
+		grid-template-columns: 1fr;
+	}
 }
 
 @media (max-width: 575.98px) {
@@ -1809,6 +1824,10 @@ body {
 	.optical-config-grid,
 	.optical-discount-list,
 	.optical-purchase-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.optical-purchase-row {
 		grid-template-columns: 1fr;
 	}
 }

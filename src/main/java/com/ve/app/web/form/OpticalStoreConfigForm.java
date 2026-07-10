@@ -14,6 +14,7 @@ public class OpticalStoreConfigForm {
 	private List<FrameDiscountOptionForm> frameDiscountOptions = new ArrayList<>();
 	private List<LensOptionChargeForm> lensOptionCharges = new ArrayList<>();
 	private List<LensProtectionCoatingForm> lensProtectionCoatings = new ArrayList<>();
+	private List<LensTransitionOptionForm> lensTransitionOptions = new ArrayList<>();
 	private List<LensPriceForm> lensPrices = new ArrayList<>();
 
 	public BigDecimal getEyeExamPrice() {
@@ -78,6 +79,14 @@ public class OpticalStoreConfigForm {
 
 	public void setLensProtectionCoatings(List<LensProtectionCoatingForm> lensProtectionCoatings) {
 		this.lensProtectionCoatings = lensProtectionCoatings;
+	}
+
+	public List<LensTransitionOptionForm> getLensTransitionOptions() {
+		return lensTransitionOptions;
+	}
+
+	public void setLensTransitionOptions(List<LensTransitionOptionForm> lensTransitionOptions) {
+		this.lensTransitionOptions = lensTransitionOptions;
 	}
 
 	public List<LensPriceForm> getLensPrices() {

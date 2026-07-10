@@ -67,6 +67,7 @@
 		var frameFields = Array.prototype.slice.call(form.querySelectorAll("[data-frame-fields]"));
 		var lensTypeField = form.querySelector("[data-lens-type-field]");
 		var lensCoatingField = form.querySelector("[data-lens-coating-field]");
+		var lensTransitionField = form.querySelector("[data-lens-transition-field]");
 		var lensOptionField = form.querySelector("[data-lens-option-field]");
 		var framePriceControl = form.querySelector("[name='framePrice']");
 		var frameDiscountControl = form.querySelector("[name='selectedFrameDiscountPercent']");
@@ -74,11 +75,11 @@
 		var lensTypeControl = form.querySelector("[name='lensTypeName']");
 		var lensOptionControl = form.querySelector("[name='lensOptionName']");
 		var lensCoatingControl = form.querySelector("[name='lensProtectionCoatingName']");
+		var lensTransitionControl = form.querySelector("[name='lensTransitionOptionName']");
 		var frameControl = form.querySelector("[data-frame-control]");
 		var pofControl = form.querySelector("[data-pof-control]");
 		var lensesControl = form.querySelector("[data-lenses-control]");
 		var eyeExamControl = form.querySelector("[data-eye-exam]");
-		var examHereControl = form.querySelector("[data-exam-here]");
 		var outsideRxControl = form.querySelector("[data-outside-rx]");
 		var layout = form.closest(".optical-estimate-layout");
 		var summaryTable = layout ? layout.querySelector("[data-estimate-summary-table]") : null;
@@ -123,9 +124,19 @@
 			return option ? moneyValue(option.getAttribute("data-price")) : 0;
 		}
 
+		function selectedLensTransitionPrice() {
+			var option = selectedOption(lensTransitionControl);
+			return option ? moneyValue(option.getAttribute("data-price")) : 0;
+		}
+
 		function selectedPrescriptionSource() {
-			var checked = form.querySelector("[name='prescriptionSource']:checked");
-			return checked ? checked.value : "";
+			if (eyeExamControl && eyeExamControl.checked) {
+				return "EXAM_HERE";
+			}
+			if (outsideRxControl && outsideRxControl.checked) {
+				return "OUTSIDE_RX";
+			}
+			return "";
 		}
 
 		function formatMoney(amount) {
@@ -209,6 +220,7 @@
 			var hasLenses = lensesControl && lensesControl.checked;
 			var hasEyeExam = eyeExamControl && eyeExamControl.checked;
 			var completeGlasses = hasLenses && (hasFrame || hasPof);
+			var examDiscountEligible = hasLenses && hasFrame;
 			var prescriptionSource = selectedPrescriptionSource();
 			var eyeExamPrice = moneyValue(form.getAttribute("data-eye-exam-price"));
 			var examDiscount = moneyValue(form.getAttribute("data-exam-discount"));
@@ -220,8 +232,10 @@
 			var lensTypeOption = selectedOption(lensTypeControl);
 			var lensOption = selectedOption(lensOptionControl);
 			var lensCoatingOption = selectedOption(lensCoatingControl);
+			var lensTransitionOption = selectedOption(lensTransitionControl);
 			var lensOptionCharge = completeGlasses ? selectedLensOptionCharge() : 0;
 			var lensCoatingPrice = hasLenses ? selectedLensCoatingPrice() : 0;
+			var lensTransitionPrice = hasLenses ? selectedLensTransitionPrice() : 0;
 
 			if (hasEyeExam) {
 				addLine(lines, "Eye exam", eyeExamPrice);
@@ -241,6 +255,9 @@
 			if (hasLenses && lensCoatingOption && lensCoatingOption.value && lensCoatingPrice > 0) {
 				addLine(lines, "Lens protection coating - " + lensCoatingOption.value, lensCoatingPrice);
 			}
+			if (hasLenses && lensTransitionOption && lensTransitionOption.value && lensTransitionPrice > 0) {
+				addLine(lines, "Transition - " + lensTransitionOption.value, lensTransitionPrice);
+			}
 
 			if (hasInsurance) {
 				addDiscount(lines, "Insurance discount", moneyValue(insuranceDiscountControl && insuranceDiscountControl.value));
@@ -248,7 +265,7 @@
 				return;
 			}
 
-			if (noInsurance && hasEyeExam && completeGlasses) {
+			if (noInsurance && hasEyeExam && examDiscountEligible) {
 				addDiscount(lines, "Exam discount", capped(examDiscount, eyeExamPrice));
 			}
 			if (noInsurance && !hasEyeExam && hasLenses && prescriptionSource === "OUTSIDE_RX") {
@@ -276,6 +293,7 @@
 			});
 			setVisible(lensTypeField, hasLenses);
 			setVisible(lensCoatingField, hasLenses);
+			setVisible(lensTransitionField, hasLenses);
 			setVisible(lensOptionField, completeGlasses);
 			calculateEstimate();
 		}
@@ -306,18 +324,10 @@
 		form.querySelectorAll("[data-insurance-control]").forEach(function (control) {
 			control.addEventListener("change", updateEstimateFields);
 		});
-		if (eyeExamControl && examHereControl) {
+		if (eyeExamControl && outsideRxControl) {
 			eyeExamControl.addEventListener("change", function () {
 				if (eyeExamControl.checked) {
-					examHereControl.checked = true;
-				}
-				updateEstimateFields();
-			});
-		}
-		if (examHereControl && eyeExamControl) {
-			examHereControl.addEventListener("change", function () {
-				if (examHereControl.checked) {
-					eyeExamControl.checked = true;
+					outsideRxControl.checked = false;
 				}
 				updateEstimateFields();
 			});
@@ -394,6 +404,38 @@
 			priceInput.min = "0";
 			priceInput.name = "lensProtectionCoatings[" + index + "].price";
 			priceInput.id = "lensProtectionCoatings" + index + ".price";
+
+			nameCell.appendChild(nameInput);
+			priceCell.appendChild(priceInput);
+			nameInput.focus();
+		});
+	});
+
+	document.querySelectorAll("[data-add-transition-row]").forEach(function (button) {
+		button.addEventListener("click", function () {
+			var table = document.querySelector("[data-lens-transition-table]");
+			if (!table || !table.tBodies.length) {
+				return;
+			}
+			var body = table.tBodies[0];
+			var index = body.rows.length;
+			var row = body.insertRow();
+			var nameCell = row.insertCell();
+			var priceCell = row.insertCell();
+
+			var nameInput = document.createElement("input");
+			nameInput.className = "form-control";
+			nameInput.type = "text";
+			nameInput.name = "lensTransitionOptions[" + index + "].name";
+			nameInput.id = "lensTransitionOptions" + index + ".name";
+
+			var priceInput = document.createElement("input");
+			priceInput.className = "form-control";
+			priceInput.type = "number";
+			priceInput.step = "0.01";
+			priceInput.min = "0";
+			priceInput.name = "lensTransitionOptions[" + index + "].price";
+			priceInput.id = "lensTransitionOptions" + index + ".price";
 
 			nameCell.appendChild(nameInput);
 			priceCell.appendChild(priceInput);

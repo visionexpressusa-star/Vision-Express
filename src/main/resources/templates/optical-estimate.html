@@ -54,22 +54,36 @@
 							<fieldset class="optical-fieldset">
 								<legend>What is the customer buying?</legend>
 								<div class="intake-checkbox-grid optical-purchase-grid">
-									<label class="intake-checkbox">
-										<input type="checkbox" th:field="*{buyingEyeExam}" data-eye-exam>
-										<span>Eye exam</span>
-									</label>
-									<label class="intake-checkbox">
-										<input type="checkbox" th:field="*{buyingFrame}" data-frame-control>
-										<span>Frame</span>
-									</label>
-									<label class="intake-checkbox">
-										<input type="checkbox" th:field="*{buyingPof}" data-pof-control>
-										<span>POF</span>
-									</label>
-									<label class="intake-checkbox">
-										<input type="checkbox" th:field="*{buyingLenses}" data-lenses-control>
-										<span>Lenses</span>
-									</label>
+									<div class="optical-purchase-row">
+										<label class="intake-checkbox">
+											<input type="checkbox" th:field="*{buyingEyeExam}" data-eye-exam>
+											<span>Eye exam</span>
+										</label>
+										<label class="intake-checkbox">
+											<input type="checkbox"
+												   name="prescriptionSource"
+												   value="OUTSIDE_RX"
+												   data-outside-rx
+												   th:checked="*{prescriptionSource == 'OUTSIDE_RX'}">
+											<span>Outside Rx</span>
+										</label>
+									</div>
+									<div class="optical-purchase-row">
+										<label class="intake-checkbox">
+											<input type="checkbox" th:field="*{buyingFrame}" data-frame-control>
+											<span>Frame</span>
+										</label>
+										<label class="intake-checkbox">
+											<input type="checkbox" th:field="*{buyingPof}" data-pof-control>
+											<span>POF</span>
+										</label>
+									</div>
+									<div class="optical-purchase-row optical-purchase-row-single">
+										<label class="intake-checkbox">
+											<input type="checkbox" th:field="*{buyingLenses}" data-lenses-control>
+											<span>Lenses</span>
+										</label>
+									</div>
 								</div>
 
 								<div class="optical-dependent-grid">
@@ -109,6 +123,16 @@
 													th:text="|${coating.name()} - $${#numbers.formatDecimal(coating.price(), 1, 'COMMA', 2, 'POINT')}|">Coating</option>
 										</select>
 									</div>
+									<div class="field-group optical-wide-field" data-lens-transition-field>
+										<label for="lens-transition-option">Transition</label>
+										<select id="lens-transition-option" class="form-control" th:field="*{lensTransitionOptionName}">
+											<option value="" data-price="0">None</option>
+											<option th:each="option : ${config.lensTransitionOptions}"
+													th:value="${option.name()}"
+													th:attr="data-price=${option.price()}"
+													th:text="|${option.name()} - $${#numbers.formatDecimal(option.price(), 1, 'COMMA', 2, 'POINT')}|">Transition</option>
+										</select>
+									</div>
 									<div class="field-group optical-wide-field" data-lens-option-field>
 										<label for="lens-option">Lens option</label>
 										<select id="lens-option" class="form-control" th:field="*{lensOptionName}">
@@ -119,20 +143,6 @@
 													th:text="|${option.name()} - $${#numbers.formatDecimal(option.charge(), 1, 'COMMA', 2, 'POINT')}|">Regular</option>
 										</select>
 									</div>
-								</div>
-							</fieldset>
-
-							<fieldset class="optical-fieldset">
-								<legend>Prescription source</legend>
-								<div class="optical-choice-row">
-									<label class="intake-checkbox">
-										<input type="radio" th:field="*{prescriptionSource}" value="EXAM_HERE" data-exam-here>
-										<span>Exam here</span>
-									</label>
-									<label class="intake-checkbox">
-										<input type="radio" th:field="*{prescriptionSource}" value="OUTSIDE_RX" data-outside-rx>
-										<span>Outside Rx</span>
-									</label>
 								</div>
 							</fieldset>
 

@@ -4,12 +4,14 @@ import com.ve.app.model.OpticalFrameDiscountOption;
 import com.ve.app.model.OpticalLensOptionCharge;
 import com.ve.app.model.OpticalLensPrice;
 import com.ve.app.model.OpticalLensProtectionCoating;
+import com.ve.app.model.OpticalLensTransitionOption;
 import com.ve.app.model.OpticalStoreConfigEntity;
 import com.ve.app.repository.OpticalStoreConfigRepository;
 import com.ve.app.web.form.FrameDiscountOptionForm;
 import com.ve.app.web.form.LensOptionChargeForm;
 import com.ve.app.web.form.LensPriceForm;
 import com.ve.app.web.form.LensProtectionCoatingForm;
+import com.ve.app.web.form.LensTransitionOptionForm;
 import com.ve.app.web.form.OpticalStoreConfigForm;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -51,6 +53,9 @@ public class OpticalStoreConfigService {
 		form.setLensProtectionCoatings(current.getLensProtectionCoatings().stream()
 				.map(coating -> new LensProtectionCoatingForm(coating.name(), coating.price()))
 				.toList());
+		form.setLensTransitionOptions(current.getLensTransitionOptions().stream()
+				.map(option -> new LensTransitionOptionForm(option.name(), option.price()))
+				.toList());
 		form.setLensPrices(current.getLensPrices().stream()
 				.map(lens -> new LensPriceForm(lens.name(), lens.price()))
 				.toList());
@@ -83,10 +88,15 @@ public class OpticalStoreConfigService {
 				.filter(coating -> coating.getName() != null && !coating.getName().isBlank())
 				.map(coating -> new LensProtectionCoating(coating.getName().trim(), moneyOrZero(coating.getPrice())))
 				.toList();
+		List<LensTransitionOption> lensTransitionOptions = nullToList(form.getLensTransitionOptions()).stream()
+				.filter(option -> option.getName() != null && !option.getName().isBlank())
+				.map(option -> new LensTransitionOption(option.getName().trim(), moneyOrZero(option.getPrice())))
+				.toList();
 
 		replaceFrameDiscountOptions(entity, frameDiscounts);
 		replaceLensOptionCharges(entity, lensOptionCharges);
 		replaceLensProtectionCoatings(entity, lensProtectionCoatings);
+		replaceLensTransitionOptions(entity, lensTransitionOptions);
 		replaceLensPrices(entity, lensPrices);
 		configRepository.save(entity);
 	}
@@ -104,6 +114,10 @@ public class OpticalStoreConfigService {
 				new LensProtectionCoating("BF/P - UV/AR/Anti-Scratch", new BigDecimal("89.99")),
 				new LensProtectionCoating("SV - Blue Shield + UV/AR/Anti-Scratch", new BigDecimal("109.99")),
 				new LensProtectionCoating("BF/P - Blue Shield + UV/AR/Anti-Scratch", new BigDecimal("149.99"))));
+		defaultConfig.setLensTransitionOptions(List.of(
+				new LensTransitionOption("Regular (Gray/Brown)", new BigDecimal("129.99")),
+				new LensTransitionOption("Regular (Blue/Green - only for progressive)", new BigDecimal("129.99")),
+				new LensTransitionOption("Extra Dark (Gray for progressive only)", new BigDecimal("169.99"))));
 		defaultConfig.setLensPrices(List.of(
 				new LensPrice("Single Vision - CR39 Plastic", new BigDecimal("219.99")),
 				new LensPrice("Single Vision - Poly HD", new BigDecimal("249.99")),
@@ -148,6 +162,7 @@ public class OpticalStoreConfigService {
 			replaceFrameDiscountOptions(entity, defaultConfig.getFrameDiscountOptions());
 			replaceLensOptionCharges(entity, defaultConfig.getLensOptionCharges());
 			replaceLensProtectionCoatings(entity, defaultConfig.getLensProtectionCoatings());
+			replaceLensTransitionOptions(entity, defaultConfig.getLensTransitionOptions());
 			replaceLensPrices(entity, defaultConfig.getLensPrices());
 			return configRepository.save(entity);
 		});
@@ -171,6 +186,9 @@ public class OpticalStoreConfigService {
 				.toList());
 		config.setLensProtectionCoatings(entity.getLensProtectionCoatings().stream()
 				.map(coating -> new LensProtectionCoating(coating.getName(), coating.getPrice()))
+				.toList());
+		config.setLensTransitionOptions(entity.getLensTransitionOptions().stream()
+				.map(option -> new LensTransitionOption(option.getName(), option.getPrice()))
 				.toList());
 		return config;
 	}
@@ -203,6 +221,14 @@ public class OpticalStoreConfigService {
 		for (int index = 0; index < coatings.size(); index++) {
 			LensProtectionCoating coating = coatings.get(index);
 			entity.getLensProtectionCoatings().add(new OpticalLensProtectionCoating(entity, index + 1, coating.name(), coating.price()));
+		}
+	}
+
+	private void replaceLensTransitionOptions(OpticalStoreConfigEntity entity, List<LensTransitionOption> options) {
+		entity.getLensTransitionOptions().clear();
+		for (int index = 0; index < options.size(); index++) {
+			LensTransitionOption option = options.get(index);
+			entity.getLensTransitionOptions().add(new OpticalLensTransitionOption(entity, index + 1, option.name(), option.price()));
 		}
 	}
 

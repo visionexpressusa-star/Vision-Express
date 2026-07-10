@@ -49,6 +49,10 @@ public class OpticalStoreConfigEntity {
 	@OrderBy("sortNumber ASC, id ASC")
 	private List<OpticalLensProtectionCoating> lensProtectionCoatings = new ArrayList<>();
 
+	@OneToMany(mappedBy = "config", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OrderBy("sortNumber ASC, id ASC")
+	private List<OpticalLensTransitionOption> lensTransitionOptions = new ArrayList<>();
+
 	protected OpticalStoreConfigEntity() {
 	}
 
@@ -125,6 +129,10 @@ public class OpticalStoreConfigEntity {
 
 	public List<OpticalLensProtectionCoating> getLensProtectionCoatings() {
 		return lensProtectionCoatings;
+	}
+
+	public List<OpticalLensTransitionOption> getLensTransitionOptions() {
+		return lensTransitionOptions;
 	}
 
 }

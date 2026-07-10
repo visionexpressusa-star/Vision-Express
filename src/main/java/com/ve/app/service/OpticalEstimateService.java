@@ -16,6 +16,7 @@ public class OpticalEstimateService {
 		OpticalEstimateResult result = new OpticalEstimateResult();
 		boolean hasInsurance = Boolean.TRUE.equals(form.getHasInsurance());
 		boolean completeGlasses = form.isBuyingLenses() && (form.isBuyingFrame() || form.isBuyingPof());
+		boolean examDiscountEligible = form.isBuyingLenses() && form.isBuyingFrame();
 
 		BigDecimal eyeExamPrice = moneyOrZero(config.getEyeExamPrice());
 		BigDecimal framePrice = form.isBuyingFrame() ? moneyOrZero(form.getFramePrice()) : BigDecimal.ZERO;
@@ -26,6 +27,8 @@ public class OpticalEstimateService {
 		BigDecimal lensOptionCharge = selectedLensOption == null ? BigDecimal.ZERO : moneyOrZero(selectedLensOption.charge());
 		LensProtectionCoating selectedCoating = findLensProtectionCoating(form, config).orElse(null);
 		BigDecimal lensProtectionCoatingPrice = selectedCoating == null ? BigDecimal.ZERO : moneyOrZero(selectedCoating.price());
+		LensTransitionOption selectedTransition = findLensTransitionOption(form, config).orElse(null);
+		BigDecimal lensTransitionOptionPrice = selectedTransition == null ? BigDecimal.ZERO : moneyOrZero(selectedTransition.price());
 
 		if (form.isBuyingEyeExam()) {
 			add(result, "Eye exam", eyeExamPrice);
@@ -50,6 +53,11 @@ public class OpticalEstimateService {
 				&& lensProtectionCoatingPrice.compareTo(BigDecimal.ZERO) > 0) {
 			add(result, "Lens protection coating - " + selectedCoating.name(), lensProtectionCoatingPrice);
 		}
+		if (form.isBuyingLenses()
+				&& selectedTransition != null
+				&& lensTransitionOptionPrice.compareTo(BigDecimal.ZERO) > 0) {
+			add(result, "Transition - " + selectedTransition.name(), lensTransitionOptionPrice);
+		}
 
 		if (hasInsurance) {
 			addDiscount(result, "Insurance discount", moneyOrZero(form.getInsuranceDiscount()));
@@ -57,7 +65,7 @@ public class OpticalEstimateService {
 			return result;
 		}
 
-		if (form.isBuyingEyeExam() && completeGlasses) {
+		if (form.isBuyingEyeExam() && examDiscountEligible) {
 			addDiscount(result, "Exam discount", capped(config.getExamDiscountWithCompleteGlasses(), eyeExamPrice));
 		}
 		if (!form.isBuyingEyeExam()
@@ -118,6 +126,15 @@ public class OpticalEstimateService {
 		}
 		return config.getLensProtectionCoatings().stream()
 				.filter(coating -> coating.name().equals(form.getLensProtectionCoatingName()))
+				.findFirst();
+	}
+
+	private Optional<LensTransitionOption> findLensTransitionOption(OpticalEstimateForm form, OpticalStoreConfig config) {
+		if (form.getLensTransitionOptionName() == null || form.getLensTransitionOptionName().isBlank()) {
+			return Optional.empty();
+		}
+		return config.getLensTransitionOptions().stream()
+				.filter(option -> option.name().equals(form.getLensTransitionOptionName()))
 				.findFirst();
 	}
 
