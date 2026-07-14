@@ -188,12 +188,12 @@ public class IntakeFormService {
 				form.isPlastic(),
 				form.isPoly(),
 				form.isPolyAspheric(),
-				form.isHighIndex160(),
 				form.isHighIndex167(),
 				form.isUltraHiIndex174(),
 				form.isScUvAr(),
 				form.isBlueShield(),
-				form.isTransition());
+				form.isTransition(),
+				form.isDryEyeDrop());
 		lensRecommendationRepository.save(recommendation);
 	}
 

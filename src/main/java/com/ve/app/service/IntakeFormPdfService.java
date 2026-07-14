@@ -199,13 +199,13 @@ public class IntakeFormPdfService {
 				recommended(form.isPlastic(), "Plastic"),
 				recommended(form.isPoly(), "Poly"),
 				recommended(form.isPolyAspheric(), "Poly Aspheric"),
-				recommended(form.isHighIndex160(), "High Index 1.60"),
 				recommended(form.isHighIndex167(), "High Index 1.67"),
 				recommended(form.isUltraHiIndex174(), "Ultra High Index 1.74")));
 		addRecommendationLine(table, "Lens Treatment", selectedValues(
 				recommended(form.isScUvAr(), "SC/UV/AR"),
 				recommended(form.isBlueShield(), "Blue Shield Protection")));
 		addRecommendationLine(table, "Transition", yesNo(form.isTransition()));
+		addRecommendationLine(table, "Dry Eye Drop", yesNo(form.isDryEyeDrop()));
 		section.addCell(contentCell(table));
 		document.add(section);
 	}

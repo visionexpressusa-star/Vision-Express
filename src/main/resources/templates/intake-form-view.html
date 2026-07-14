@@ -235,9 +235,9 @@
 									</tr>
 									<tr>
 										<th scope="row"></th>
-										<td><label class="recommendation-option"><input type="checkbox" th:field="*{highIndex160}"><span>High Index 1.60</span></label></td>
 										<td><label class="recommendation-option"><input type="checkbox" th:field="*{highIndex167}"><span>High Index 1.67</span></label></td>
 										<td><label class="recommendation-option"><input type="checkbox" th:field="*{ultraHiIndex174}"><span>Ultra High Index 1.74</span></label></td>
+										<td></td>
 										<td></td>
 									</tr>
 									<tr>
@@ -253,6 +253,11 @@
 										<td></td>
 										<td></td>
 										<td></td>
+									</tr>
+									<tr class="dry-eye-drop-row" th:classappend="*{dryEyeDrop} ? ' recommended'">
+										<th scope="row">Dry Eye Drops</th>
+										<td><label class="recommendation-option"><input type="checkbox" th:field="*{dryEyeDrop}"><span>Recommended</span></label></td>
+										<td></td><td></td><td></td>
 									</tr>
 								</tbody>
 							</table>

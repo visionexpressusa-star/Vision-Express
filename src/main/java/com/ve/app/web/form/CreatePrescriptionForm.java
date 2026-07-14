@@ -74,8 +74,6 @@ public class CreatePrescriptionForm {
 
 	private boolean polyAspheric;
 
-	private boolean highIndex160;
-
 	private boolean highIndex167;
 
 	private boolean ultraHiIndex174;
@@ -85,6 +83,8 @@ public class CreatePrescriptionForm {
 	private boolean blueShield;
 
 	private boolean transition;
+
+	private boolean dryEyeDrop;
 
 	public static CreatePrescriptionForm from(Prescription prescription, LensRecommendation recommendation) {
 		CreatePrescriptionForm form = new CreatePrescriptionForm();
@@ -124,12 +124,12 @@ public class CreatePrescriptionForm {
 			form.plastic = recommendation.isPlastic();
 			form.poly = recommendation.isPoly();
 			form.polyAspheric = recommendation.isPolyAspheric();
-			form.highIndex160 = recommendation.isHighIndex160();
 			form.highIndex167 = recommendation.isHighIndex167();
 			form.ultraHiIndex174 = recommendation.isUltraHiIndex174();
 			form.scUvAr = recommendation.isScUvAr();
 			form.blueShield = recommendation.isBlueShield();
 			form.transition = recommendation.isTransition();
+			form.dryEyeDrop = recommendation.isDryEyeDrop();
 		}
 		return form;
 	}
@@ -414,14 +414,6 @@ public class CreatePrescriptionForm {
 		this.polyAspheric = polyAspheric;
 	}
 
-	public boolean isHighIndex160() {
-		return highIndex160;
-	}
-
-	public void setHighIndex160(boolean highIndex160) {
-		this.highIndex160 = highIndex160;
-	}
-
 	public boolean isHighIndex167() {
 		return highIndex167;
 	}
@@ -460,5 +452,13 @@ public class CreatePrescriptionForm {
 
 	public void setTransition(boolean transition) {
 		this.transition = transition;
+	}
+
+	public boolean isDryEyeDrop() {
+		return dryEyeDrop;
+	}
+
+	public void setDryEyeDrop(boolean dryEyeDrop) {
+		this.dryEyeDrop = dryEyeDrop;
 	}
 }

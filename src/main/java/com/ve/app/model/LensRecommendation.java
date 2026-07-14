@@ -43,9 +43,6 @@ public class LensRecommendation {
 	@Column(name = "is_poly_aspheric", nullable = false)
 	private boolean polyAspheric;
 
-	@Column(name = "is_high_index_160", nullable = false)
-	private boolean highIndex160;
-
 	@Column(name = "is_high_index_167", nullable = false)
 	private boolean highIndex167;
 
@@ -61,6 +58,9 @@ public class LensRecommendation {
 	@Column(name = "is_transition", nullable = false)
 	private boolean transition;
 
+	@Column(name = "is_dry_eye_drop", nullable = false)
+	private boolean dryEyeDrop;
+
 	protected LensRecommendation() {
 	}
 
@@ -73,12 +73,12 @@ public class LensRecommendation {
 			boolean plastic,
 			boolean poly,
 			boolean polyAspheric,
-			boolean highIndex160,
 			boolean highIndex167,
 			boolean ultraHiIndex174,
 			boolean scUvAr,
 			boolean blueShield,
-			boolean transition) {
+			boolean transition,
+			boolean dryEyeDrop) {
 		this.prescription = prescription;
 		this.sv = sv;
 		this.bifocal = bifocal;
@@ -87,12 +87,12 @@ public class LensRecommendation {
 		this.plastic = plastic;
 		this.poly = poly;
 		this.polyAspheric = polyAspheric;
-		this.highIndex160 = highIndex160;
 		this.highIndex167 = highIndex167;
 		this.ultraHiIndex174 = ultraHiIndex174;
 		this.scUvAr = scUvAr;
 		this.blueShield = blueShield;
 		this.transition = transition;
+		this.dryEyeDrop = dryEyeDrop;
 	}
 
 	public boolean isSv() {
@@ -123,10 +123,6 @@ public class LensRecommendation {
 		return polyAspheric;
 	}
 
-	public boolean isHighIndex160() {
-		return highIndex160;
-	}
-
 	public boolean isHighIndex167() {
 		return highIndex167;
 	}
@@ -147,6 +143,10 @@ public class LensRecommendation {
 		return transition;
 	}
 
+	public boolean isDryEyeDrop() {
+		return dryEyeDrop;
+	}
+
 	public void update(
 			boolean sv,
 			boolean bifocal,
@@ -155,12 +155,12 @@ public class LensRecommendation {
 			boolean plastic,
 			boolean poly,
 			boolean polyAspheric,
-			boolean highIndex160,
 			boolean highIndex167,
 			boolean ultraHiIndex174,
 			boolean scUvAr,
 			boolean blueShield,
-			boolean transition) {
+			boolean transition,
+			boolean dryEyeDrop) {
 		this.sv = sv;
 		this.bifocal = bifocal;
 		this.blendedBifocal = blendedBifocal;
@@ -168,11 +168,11 @@ public class LensRecommendation {
 		this.plastic = plastic;
 		this.poly = poly;
 		this.polyAspheric = polyAspheric;
-		this.highIndex160 = highIndex160;
 		this.highIndex167 = highIndex167;
 		this.ultraHiIndex174 = ultraHiIndex174;
 		this.scUvAr = scUvAr;
 		this.blueShield = blueShield;
 		this.transition = transition;
+		this.dryEyeDrop = dryEyeDrop;
 	}
 }
