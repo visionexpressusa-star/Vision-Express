@@ -177,6 +177,16 @@
 				return;
 			}
 
+			var subtotal = lines.reduce(function (sum, line) {
+				return line.amount > 0 ? sum + line.amount : sum;
+			}, 0);
+			subtotal = Math.round(subtotal * 100) / 100;
+
+			var totalDiscount = lines.reduce(function (sum, line) {
+				return line.amount < 0 ? sum + Math.abs(line.amount) : sum;
+			}, 0);
+			totalDiscount = Math.round(totalDiscount * 100) / 100;
+
 			var total = lines.reduce(function (sum, line) {
 				return sum + line.amount;
 			}, 0);
@@ -194,6 +204,28 @@
 				row.appendChild(amountCell);
 				summaryLines.appendChild(row);
 			});
+
+			var subtotalRow = document.createElement("tr");
+			var subtotalLabel = document.createElement("th");
+			var subtotalAmount = document.createElement("td");
+			subtotalRow.className = "optical-subtotal-row";
+			subtotalLabel.scope = "row";
+			subtotalLabel.textContent = "Subtotal";
+			subtotalAmount.textContent = formatMoney(subtotal);
+			subtotalRow.appendChild(subtotalLabel);
+			subtotalRow.appendChild(subtotalAmount);
+			summaryLines.appendChild(subtotalRow);
+
+			var discountRow = document.createElement("tr");
+			var discountLabel = document.createElement("th");
+			var discountAmount = document.createElement("td");
+			discountRow.className = "optical-discount-total-row";
+			discountLabel.scope = "row";
+			discountLabel.textContent = "Total discount";
+			discountAmount.textContent = formatMoney(-totalDiscount);
+			discountRow.appendChild(discountLabel);
+			discountRow.appendChild(discountAmount);
+			summaryLines.appendChild(discountRow);
 
 			var totalRow = document.createElement("tr");
 			var totalLabel = document.createElement("th");

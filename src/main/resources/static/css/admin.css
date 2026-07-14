@@ -1138,6 +1138,14 @@ body {
 	white-space: nowrap;
 }
 
+.optical-subtotal-row th,
+.optical-subtotal-row td,
+.optical-discount-total-row th,
+.optical-discount-total-row td {
+	border-top: 1px solid var(--border);
+	font-weight: 700;
+}
+
 .optical-total-row th,
 .optical-total-row td {
 	color: var(--navy);

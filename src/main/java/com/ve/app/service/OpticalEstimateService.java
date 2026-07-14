@@ -155,11 +155,24 @@ public class OpticalEstimateService {
 	}
 
 	private void finish(OpticalEstimateResult result) {
+		BigDecimal subtotal = result.getLineItems().stream()
+				.map(EstimateLineItem::amount)
+				.filter(amount -> amount.compareTo(BigDecimal.ZERO) > 0)
+				.reduce(BigDecimal.ZERO, BigDecimal::add)
+				.setScale(2, RoundingMode.HALF_UP);
+		BigDecimal totalDiscount = result.getLineItems().stream()
+				.map(EstimateLineItem::amount)
+				.filter(amount -> amount.compareTo(BigDecimal.ZERO) < 0)
+				.map(BigDecimal::abs)
+				.reduce(BigDecimal.ZERO, BigDecimal::add)
+				.setScale(2, RoundingMode.HALF_UP);
 		BigDecimal total = result.getLineItems().stream()
 				.map(EstimateLineItem::amount)
 				.reduce(BigDecimal.ZERO, BigDecimal::add)
 				.max(BigDecimal.ZERO)
 				.setScale(2, RoundingMode.HALF_UP);
+		result.setSubtotal(subtotal);
+		result.setTotalDiscount(totalDiscount);
 		result.setTotal(total);
 	}
 
