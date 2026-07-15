@@ -40,23 +40,23 @@ public class OpticalEstimateService {
 			add(result, "POF", pofCharge);
 		}
 		if (form.isBuyingLenses() && selectedLens != null) {
-			add(result, "Lenses - " + selectedLens.name(), lensPrice);
+			add(result, selectedLens.name(), lensPrice);
 		}
 		if (form.isBuyingLenses()
 				&& completeGlasses
 				&& selectedLensOption != null
 				&& lensOptionCharge.compareTo(BigDecimal.ZERO) > 0) {
-			add(result, selectedLensOption.name() + " lens option", lensOptionCharge);
+			add(result, selectedLensOption.name(), lensOptionCharge);
 		}
 		if (form.isBuyingLenses()
 				&& selectedCoating != null
 				&& lensProtectionCoatingPrice.compareTo(BigDecimal.ZERO) > 0) {
-			add(result, "Lens protection coating - " + selectedCoating.name(), lensProtectionCoatingPrice);
+			add(result, selectedCoating.name(), lensProtectionCoatingPrice);
 		}
 		if (form.isBuyingLenses()
 				&& selectedTransition != null
 				&& lensTransitionOptionPrice.compareTo(BigDecimal.ZERO) > 0) {
-			add(result, "Transition - " + selectedTransition.name(), lensTransitionOptionPrice);
+			add(result, selectedTransition.name(), lensTransitionOptionPrice);
 		}
 
 		if (hasInsurance) {

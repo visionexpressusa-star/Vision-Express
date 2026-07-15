@@ -192,46 +192,59 @@
 			}, 0);
 			total = Math.max(0, Math.round(total * 100) / 100);
 
-			lines.forEach(function (line) {
-				var row = document.createElement("tr");
-				var labelCell = document.createElement("th");
-				var amountCell = document.createElement("td");
-
-				labelCell.scope = "row";
-				labelCell.textContent = line.label;
-				amountCell.textContent = formatMoney(line.amount);
-				row.appendChild(labelCell);
-				row.appendChild(amountCell);
-				summaryLines.appendChild(row);
+			var chargeLines = lines.filter(function (line) {
+				return line.amount >= 0;
 			});
+			var discountLines = lines.filter(function (line) {
+				return line.amount < 0;
+			});
+			var lineCount = Math.max(chargeLines.length, discountLines.length);
 
-			var subtotalRow = document.createElement("tr");
-			var subtotalLabel = document.createElement("th");
-			var subtotalAmount = document.createElement("td");
-			subtotalRow.className = "optical-subtotal-row";
-			subtotalLabel.scope = "row";
-			subtotalLabel.textContent = "Subtotal";
-			subtotalAmount.textContent = formatMoney(subtotal);
-			subtotalRow.appendChild(subtotalLabel);
-			subtotalRow.appendChild(subtotalAmount);
-			summaryLines.appendChild(subtotalRow);
+			function addSummaryCell(row, cellName, text, className) {
+				var cell = document.createElement(cellName);
+				cell.textContent = text || "";
+				if (className) {
+					cell.className = className;
+				}
+				if (cellName === "th") {
+					cell.scope = "row";
+				}
+				row.appendChild(cell);
+				return cell;
+			}
 
-			var discountRow = document.createElement("tr");
-			var discountLabel = document.createElement("th");
-			var discountAmount = document.createElement("td");
-			discountRow.className = "optical-discount-total-row";
-			discountLabel.scope = "row";
-			discountLabel.textContent = "Total discount";
-			discountAmount.textContent = formatMoney(-totalDiscount);
-			discountRow.appendChild(discountLabel);
-			discountRow.appendChild(discountAmount);
-			summaryLines.appendChild(discountRow);
+			function addSummaryPairRow(rowClass, chargeLabel, chargeAmount, discountLabel, discountAmount) {
+				var row = document.createElement("tr");
+				if (rowClass) {
+					row.className = rowClass;
+				}
+				addSummaryCell(row, "th", chargeLabel, "optical-summary-label optical-summary-charge-label");
+				addSummaryCell(row, "td", chargeAmount == null ? "" : formatMoney(chargeAmount), "optical-summary-amount optical-summary-charge-amount");
+				addSummaryCell(row, "th", discountLabel, "optical-summary-label optical-summary-discount-label");
+				addSummaryCell(row, "td", discountAmount == null ? "" : formatMoney(discountAmount), "optical-summary-amount optical-summary-discount-amount");
+				summaryLines.appendChild(row);
+			}
+
+			for (var index = 0; index < lineCount; index += 1) {
+				var chargeLine = chargeLines[index];
+				var discountLine = discountLines[index];
+				addSummaryPairRow(
+					"",
+					chargeLine ? chargeLine.label : "",
+					chargeLine ? chargeLine.amount : null,
+					discountLine ? discountLine.label : "",
+					discountLine ? discountLine.amount : null
+				);
+			}
+
+			addSummaryPairRow("optical-subtotal-row", "Subtotal", subtotal, "Total discount", -totalDiscount);
 
 			var totalRow = document.createElement("tr");
 			var totalLabel = document.createElement("th");
 			var totalAmount = document.createElement("td");
 			totalRow.className = "optical-total-row";
 			totalLabel.scope = "row";
+			totalLabel.colSpan = 3;
 			totalLabel.textContent = "Total";
 			totalAmount.textContent = formatMoney(total);
 			totalRow.appendChild(totalLabel);
@@ -279,16 +292,16 @@
 				addLine(lines, "POF", pofCharge);
 			}
 			if (hasLenses && lensTypeOption && lensTypeOption.value) {
-				addLine(lines, "Lenses - " + lensTypeOption.value, lensPrice);
+				addLine(lines, lensTypeOption.value, lensPrice);
 			}
 			if (hasLenses && completeGlasses && lensOption && lensOption.value && lensOptionCharge > 0) {
-				addLine(lines, lensOption.value + " lens option", lensOptionCharge);
+				addLine(lines, lensOption.value, lensOptionCharge);
 			}
 			if (hasLenses && lensCoatingOption && lensCoatingOption.value && lensCoatingPrice > 0) {
-				addLine(lines, "Lens protection coating - " + lensCoatingOption.value, lensCoatingPrice);
+				addLine(lines, lensCoatingOption.value, lensCoatingPrice);
 			}
 			if (hasLenses && lensTransitionOption && lensTransitionOption.value && lensTransitionPrice > 0) {
-				addLine(lines, "Transition - " + lensTransitionOption.value, lensTransitionPrice);
+				addLine(lines, lensTransitionOption.value, lensTransitionPrice);
 			}
 
 			if (hasInsurance) {
@@ -408,6 +421,36 @@
 			nameCell.appendChild(nameInput);
 			priceCell.appendChild(priceInput);
 			nameInput.focus();
+		});
+	});
+
+	document.querySelectorAll("[data-add-frame-discount]").forEach(function (button) {
+		button.addEventListener("click", function () {
+			var list = document.querySelector("[data-frame-discounts]");
+			if (!list) {
+				return;
+			}
+			var index = list.querySelectorAll(".field-group").length;
+			var group = document.createElement("div");
+			var label = document.createElement("label");
+			var input = document.createElement("input");
+
+			group.className = "field-group optical-inline-field";
+			label.htmlFor = "frame-discount-" + index;
+			label.textContent = "Discount %";
+
+			input.id = "frame-discount-" + index;
+			input.className = "form-control";
+			input.type = "number";
+			input.step = "0.01";
+			input.min = "0";
+			input.max = "100";
+			input.name = "frameDiscountOptions[" + index + "].percent";
+
+			group.appendChild(label);
+			group.appendChild(input);
+			list.appendChild(group);
+			input.focus();
 		});
 	});
 

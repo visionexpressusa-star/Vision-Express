@@ -108,7 +108,8 @@ public class OpticalStoreConfigService {
 				new LensOptionCharge("Regular", new BigDecimal("0.00")),
 				new LensOptionCharge("Rimless", new BigDecimal("49.99")),
 				new LensOptionCharge("Extra large frame", new BigDecimal("39.99")),
-				new LensOptionCharge("Safety lens", new BigDecimal("49.99"))));
+				new LensOptionCharge("Safety lens", new BigDecimal("49.99")),
+				new LensOptionCharge("Curve lens (frame)", new BigDecimal("39.99"))));
 		defaultConfig.setLensProtectionCoatings(List.of(
 				new LensProtectionCoating("SV - UV/AR/Anti-Scratch", new BigDecimal("79.99")),
 				new LensProtectionCoating("BF/P - UV/AR/Anti-Scratch", new BigDecimal("89.99")),
@@ -117,7 +118,11 @@ public class OpticalStoreConfigService {
 		defaultConfig.setLensTransitionOptions(List.of(
 				new LensTransitionOption("Regular (Gray/Brown)", new BigDecimal("129.99")),
 				new LensTransitionOption("Regular (Blue/Green - only for progressive)", new BigDecimal("129.99")),
-				new LensTransitionOption("Extra Dark (Gray for progressive only)", new BigDecimal("169.99"))));
+				new LensTransitionOption("Extra Dark (Gray for progressive only)", new BigDecimal("169.99")),
+				new LensTransitionOption("Polorized Gray/Brown", new BigDecimal("129.99")),
+				new LensTransitionOption("Blue/Green", new BigDecimal("149.99")),
+				new LensTransitionOption("Solid Color", new BigDecimal("89.99")),
+				new LensTransitionOption("Gradiant", new BigDecimal("99.99"))));
 		defaultConfig.setLensPrices(List.of(
 				new LensPrice("Single Vision - CR39 Plastic", new BigDecimal("219.99")),
 				new LensPrice("Single Vision - Poly HD", new BigDecimal("249.99")),

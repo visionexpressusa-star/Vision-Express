@@ -71,6 +71,7 @@
 									<div class="field-error" th:errors="*{frameDiscountOptions[__${optionStat.index}__].percent}"></div>
 								</div>
 							</div>
+							<button class="table-action edit optical-add-row" type="button" data-add-frame-discount>Add discount option</button>
 						</fieldset>
 
 						<fieldset class="optical-fieldset">
@@ -137,12 +138,12 @@
 						</fieldset>
 
 						<fieldset class="optical-fieldset">
-							<legend>Transition Options</legend>
+							<legend>Transition / Tint / Polorized Options</legend>
 							<div class="users-table-wrapper">
 								<table class="users-table optical-table" data-lens-transition-table>
 									<thead>
 										<tr>
-											<th scope="col">Transition</th>
+											<th scope="col">Transition / Tint / Polorized</th>
 											<th scope="col">Price</th>
 										</tr>
 									</thead>

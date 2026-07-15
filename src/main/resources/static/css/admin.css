@@ -1062,7 +1062,7 @@ body {
 
 .optical-estimate-layout {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(310px, 0.42fr);
+	grid-template-columns: minmax(0, 1fr) minmax(420px, 0.58fr);
 	gap: 22px;
 	align-items: start;
 }
@@ -1124,18 +1124,28 @@ body {
 
 .optical-summary-table th,
 .optical-summary-table td {
-	padding: 13px 14px;
+	padding: 12px 10px;
+	vertical-align: top;
 }
 
 .optical-summary-table th {
-	width: 68%;
 	color: var(--heading);
 	background: transparent;
 }
 
-.optical-summary-table td {
+.optical-summary-table .optical-summary-amount,
+.optical-total-row td {
 	text-align: right;
 	white-space: nowrap;
+}
+
+.optical-summary-discount-label {
+	border-left: 1px solid var(--border);
+}
+
+.optical-summary-discount-label,
+.optical-summary-discount-amount {
+	color: var(--muted);
 }
 
 .optical-subtotal-row th,

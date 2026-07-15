@@ -113,7 +113,17 @@
 										</select>
 										<div class="field-error" th:errors="*{lensTypeName}"></div>
 									</div>
-									<div class="field-group optical-wide-field" data-lens-coating-field>
+									<div class="field-group" data-lens-option-field>
+										<label for="lens-option">Lens option</label>
+										<select id="lens-option" class="form-control" th:field="*{lensOptionName}">
+											<option value="">Select lens option</option>
+											<option th:each="option : ${config.lensOptionCharges}"
+													th:value="${option.name()}"
+													th:attr="data-charge=${option.charge()}"
+													th:text="|${option.name()} - $${#numbers.formatDecimal(option.charge(), 1, 'COMMA', 2, 'POINT')}|">Regular</option>
+										</select>
+									</div>
+									<div class="field-group" data-lens-coating-field>
 										<label for="lens-protection-coating">Lens protection coating</label>
 										<select id="lens-protection-coating" class="form-control" th:field="*{lensProtectionCoatingName}">
 											<option value="" data-price="0">None</option>
@@ -124,23 +134,13 @@
 										</select>
 									</div>
 									<div class="field-group optical-wide-field" data-lens-transition-field>
-										<label for="lens-transition-option">Transition</label>
+										<label for="lens-transition-option">Transition / Tint / Polorized</label>
 										<select id="lens-transition-option" class="form-control" th:field="*{lensTransitionOptionName}">
 											<option value="" data-price="0">None</option>
 											<option th:each="option : ${config.lensTransitionOptions}"
 													th:value="${option.name()}"
 													th:attr="data-price=${option.price()}"
 													th:text="|${option.name()} - $${#numbers.formatDecimal(option.price(), 1, 'COMMA', 2, 'POINT')}|">Transition</option>
-										</select>
-									</div>
-									<div class="field-group optical-wide-field" data-lens-option-field>
-										<label for="lens-option">Lens option</label>
-										<select id="lens-option" class="form-control" th:field="*{lensOptionName}">
-											<option value="">Select lens option</option>
-											<option th:each="option : ${config.lensOptionCharges}"
-													th:value="${option.name()}"
-													th:attr="data-charge=${option.charge()}"
-													th:text="|${option.name()} - $${#numbers.formatDecimal(option.charge(), 1, 'COMMA', 2, 'POINT')}|">Regular</option>
 										</select>
 									</div>
 								</div>
