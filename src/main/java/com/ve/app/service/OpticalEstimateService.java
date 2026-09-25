@@ -61,7 +61,7 @@ public class OpticalEstimateService {
 
 		if (hasInsurance) {
 			addDiscount(result, "Insurance discount", moneyOrZero(form.getInsuranceDiscount()));
-			finish(result);
+			finish(result, form);
 			return result;
 		}
 
@@ -85,7 +85,7 @@ public class OpticalEstimateService {
 			addDiscount(result, "Lens discount", capped(config.getLensDiscountWithoutInsurance(), lensPrice));
 		}
 
-		finish(result);
+		finish(result, form);
 		return result;
 	}
 
@@ -154,7 +154,7 @@ public class OpticalEstimateService {
 		}
 	}
 
-	private void finish(OpticalEstimateResult result) {
+	private void finish(OpticalEstimateResult result, OpticalEstimateForm form) {
 		BigDecimal subtotal = result.getLineItems().stream()
 				.map(EstimateLineItem::amount)
 				.filter(amount -> amount.compareTo(BigDecimal.ZERO) > 0)
@@ -171,9 +171,27 @@ public class OpticalEstimateService {
 				.reduce(BigDecimal.ZERO, BigDecimal::add)
 				.max(BigDecimal.ZERO)
 				.setScale(2, RoundingMode.HALF_UP);
-		result.setSubtotal(subtotal);
 		result.setTotalDiscount(totalDiscount);
-		result.setTotal(total);
+		BigDecimal salesTax = BigDecimal.ZERO.setScale(2);
+		if (form.isSunglasses() && form.isBuyingFrame()) {
+			BigDecimal taxableFrame = result.getLineItems().stream()
+					.filter(line -> "Frame".equals(line.label()))
+					.map(EstimateLineItem::amount)
+					.reduce(BigDecimal.ZERO, BigDecimal::add)
+					.max(BigDecimal.ZERO);
+			salesTax = taxableFrame.multiply(new BigDecimal("0.0825")).setScale(2, RoundingMode.HALF_UP);
+		}
+		if (form.isSunglasses() && form.isBuyingFrame()) {
+			for (int index = 0; index < result.getLineItems().size(); index++) {
+				if ("Frame".equals(result.getLineItems().get(index).label())) {
+					result.getLineItems().add(index + 1, new EstimateLineItem("Sales tax (8.25%)", salesTax));
+					break;
+				}
+			}
+		}
+		result.setSubtotal(subtotal.add(salesTax));
+		result.setSalesTax(salesTax);
+		result.setTotal(total.add(salesTax));
 	}
 
 	private BigDecimal capped(BigDecimal amount, BigDecimal cap) {

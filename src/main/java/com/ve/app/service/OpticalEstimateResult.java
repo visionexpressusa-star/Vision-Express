@@ -9,6 +9,7 @@ public class OpticalEstimateResult {
 	private final List<EstimateLineItem> lineItems = new ArrayList<>();
 	private BigDecimal subtotal = BigDecimal.ZERO;
 	private BigDecimal totalDiscount = BigDecimal.ZERO;
+	private BigDecimal salesTax = BigDecimal.ZERO;
 	private BigDecimal total = BigDecimal.ZERO;
 
 	public List<EstimateLineItem> getLineItems() {
@@ -29,6 +30,14 @@ public class OpticalEstimateResult {
 
 	public void setTotalDiscount(BigDecimal totalDiscount) {
 		this.totalDiscount = totalDiscount;
+	}
+
+	public BigDecimal getSalesTax() {
+		return salesTax;
+	}
+
+	public void setSalesTax(BigDecimal salesTax) {
+		this.salesTax = salesTax;
 	}
 
 	public BigDecimal getTotal() {

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Create Intake Form')}"></head>
+<head th:replace="~{fragments/layout :: head(${editing == true ? 'Edit Intake Form' : 'Create Intake Form'})}"></head>
 <body>
 	<div class="admin-layout">
 		<aside th:replace="~{fragments/layout :: sidebar('intake-form')}"></aside>
@@ -10,7 +10,7 @@
 			<main class="content">
 				<section class="user-create-page" aria-labelledby="create-intake-form-heading">
 					<div class="page-heading">
-						<h1 id="create-intake-form-heading">Create Intake Form</h1>
+						<h1 id="create-intake-form-heading" th:text="${editing == true ? 'Edit Intake Form' : 'Create Intake Form'}">Create Intake Form</h1>
 						<a class="back-link" th:href="@{/intake-form}">Back to intake forms</a>
 					</div>
 
@@ -19,7 +19,7 @@
 					</div>
 
 					<form class="intake-create-form"
-						  th:action="@{/intake-form/create}"
+						  th:action="${editing == true} ? @{/intake-form/{id}/edit(id=${intakeFormId})} : @{/intake-form/create}"
 						  th:object="${createIntakeFormForm}"
 						  method="post">
 						<div class="intake-field-row intake-identity-row">
@@ -141,7 +141,7 @@
 							</div>
 						</fieldset>
 
-						<fieldset class="intake-checklist" data-checklist-gate>
+						<fieldset class="intake-checklist" th:if="${editing != true}" data-checklist-gate>
 							<legend>Checklist</legend>
 							<div class="checklist-items">
 								<div class="checklist-row" th:each="item : ${checklistItems}">
@@ -168,7 +168,8 @@
 
 						<div class="form-actions">
 							<a class="cancel-button" th:href="@{/intake-form}">Cancel</a>
-							<button class="toolbar-button create-button hidden-save-button" type="submit" data-checklist-save hidden>Save</button>
+							<button th:if="${editing == true}" class="toolbar-button create-button" type="submit">Save changes</button>
+							<button th:if="${editing != true}" class="toolbar-button create-button hidden-save-button" type="submit" data-checklist-save hidden>Save</button>
 						</div>
 					</form>
 				</section>

@@ -1,5 +1,6 @@
 package com.ve.app.web.form;
 
+import com.ve.app.model.IntakeForm;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,25 @@ public class CreateIntakeFormForm {
 	private Long referralSourceId;
 
 	private List<Long> checkedChecklistItemIds = new ArrayList<>();
+
+	public static CreateIntakeFormForm from(IntakeForm intake) {
+		CreateIntakeFormForm form = new CreateIntakeFormForm();
+		form.accountId = intake.getAccountId().toString();
+		form.fullName = intake.getFullName();
+		form.retinalImagingRequired = intake.isRetinalImagingRequired();
+		form.doingEyeglasses = intake.isDoingEyeglasses();
+		form.doingContactLens = intake.isDoingContactLens();
+		form.hasInsurance = intake.isHasInsurance();
+		form.aided = intake.isAided();
+		form.pdLeft = intake.getPdLeft().toString();
+		form.pdRight = intake.getPdRight().toString();
+		form.vaRight = intake.getVaRight();
+		form.vaLeft = intake.getVaLeft();
+		form.vaBoth = intake.getVaBoth();
+		form.insuranceName = intake.getInsuranceName();
+		form.referralSourceId = intake.getReferralSource().getId();
+		return form;
+	}
 
 	public String getAccountId() {
 		return accountId;

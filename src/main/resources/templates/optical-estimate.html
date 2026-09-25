@@ -94,12 +94,18 @@
 									</div>
 									<div class="field-group" data-frame-fields>
 										<label for="frame-discount">Frame discount</label>
-										<select id="frame-discount" class="form-control" th:field="*{selectedFrameDiscountPercent}">
-											<option value="0">0%</option>
-											<option th:each="option : ${config.frameDiscountOptions}"
-													th:value="${option}"
-													th:text="|${option}%|">10%</option>
-										</select>
+										<div class="optical-frame-discount-row">
+											<select id="frame-discount" class="form-control" th:field="*{selectedFrameDiscountPercent}">
+												<option value="0">0%</option>
+												<option th:each="option : ${config.frameDiscountOptions}"
+														th:value="${option}"
+														th:text="|${option}%|">10%</option>
+											</select>
+											<label class="intake-checkbox">
+												<input type="checkbox" th:field="*{sunglasses}">
+												<span>Sunglasses</span>
+											</label>
+										</div>
 										<div class="field-error" th:errors="*{selectedFrameDiscountPercent}"></div>
 									</div>
 									<div class="field-group optical-wide-field" data-lens-type-field>

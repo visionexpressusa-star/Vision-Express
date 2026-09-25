@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.RequestCacheAwareFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -34,6 +35,7 @@ public class SecurityConfig {
 			DaoAuthenticationProvider authenticationProvider) throws Exception {
 		http
 				.authenticationProvider(authenticationProvider)
+				.addFilterBefore(new ErrorContinueRedirectFilter(), RequestCacheAwareFilter.class)
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/login", "/css/**", "/images/**", "/js/**").permitAll()
 						.requestMatchers("/users/**").hasAnyAuthority("ROLE_ADMIN", "users")

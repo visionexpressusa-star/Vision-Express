@@ -43,12 +43,14 @@ public class IntakeFormController {
 	public String listIntakeForms(
 			@RequestParam(defaultValue = "") String search,
 			@RequestParam(defaultValue = "0") int page,
+			Principal principal,
 			Model model) {
 		String normalizedSearch = search.trim();
 		Page<IntakeFormListItem> intakeForms = intakeFormService.findIntakeForms(normalizedSearch, page);
 
 		model.addAttribute("intakeForms", intakeForms);
 		model.addAttribute("search", normalizedSearch);
+		model.addAttribute("currentUserId", userService.findIdByUsername(principal.getName()));
 		return "intake-form";
 	}
 
@@ -66,7 +68,8 @@ public class IntakeFormController {
 		try {
 			intakeFormService.createIntakeForm(
 					form,
-					userService.findDisplayNameByUsername(principal.getName()));
+					userService.findDisplayNameByUsername(principal.getName()),
+					userService.findIdByUsername(principal.getName()));
 		}
 		catch (IllegalArgumentException exception) {
 			model.addAttribute("formError", exception.getMessage());
@@ -74,6 +77,33 @@ public class IntakeFormController {
 			return "intake-form-create";
 		}
 		return "redirect:/intake-form?created";
+	}
+
+	@GetMapping("/{intakeFormId}/edit")
+	public String editIntakeForm(@PathVariable long intakeFormId, Principal principal, Model model) {
+		populateEditForm(model, intakeFormId, intakeFormService.findEditableIntakeForm(
+				intakeFormId, userService.findIdByUsername(principal.getName())));
+		return "intake-form-create";
+	}
+
+	@PostMapping("/{intakeFormId}/edit")
+	public String updateIntakeForm(@PathVariable long intakeFormId,
+			@ModelAttribute("createIntakeFormForm") CreateIntakeFormForm form, Principal principal, Model model) {
+		try {
+			intakeFormService.updateIntakeForm(intakeFormId, form, userService.findIdByUsername(principal.getName()));
+		}
+		catch (IllegalArgumentException exception) {
+			model.addAttribute("formError", exception.getMessage());
+			populateEditForm(model, intakeFormId, form);
+			return "intake-form-create";
+		}
+		return "redirect:/intake-form?updated";
+	}
+
+	private void populateEditForm(Model model, long id, CreateIntakeFormForm form) {
+		populateCreateForm(model, form);
+		model.addAttribute("editing", true);
+		model.addAttribute("intakeFormId", id);
 	}
 
 	@GetMapping("/{intakeFormId}/view")

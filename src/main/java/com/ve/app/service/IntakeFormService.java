@@ -21,6 +21,9 @@ import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -94,7 +97,35 @@ public class IntakeFormService {
 	}
 
 	@Transactional
-	public void createIntakeForm(CreateIntakeFormForm form, String createdBy) {
+	public void createIntakeForm(CreateIntakeFormForm form, String createdBy, Long creatorId) {
+		IntakeForm intake = validatedIntakeDetails(form, createdBy, true);
+		intake.setCreatedByUserId(creatorId);
+		intakeFormRepository.save(intake);
+	}
+
+	@Transactional(readOnly = true)
+	public CreateIntakeFormForm findEditableIntakeForm(long id, Long userId) {
+		return CreateIntakeFormForm.from(requireOwner(id, userId));
+	}
+
+	@Transactional
+	public void updateIntakeForm(long id, CreateIntakeFormForm form, Long userId) {
+		IntakeForm intake = requireOwner(id, userId);
+		intake.updateIntakeDetails(validatedIntakeDetails(form, intake.getCreatedBy(), false));
+		intakeFormRepository.save(intake);
+	}
+
+	private IntakeForm requireOwner(long id, Long userId) {
+		IntakeForm intake = intakeFormRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(
+						HttpStatus.NOT_FOUND, "Intake form was not found."));
+		if (userId == null || !userId.equals(intake.getCreatedByUserId())) {
+			throw new AccessDeniedException("You can only edit intake forms you created.");
+		}
+		return intake;
+	}
+
+	private IntakeForm validatedIntakeDetails(CreateIntakeFormForm form, String createdBy, boolean checkChecklist) {
 		Long accountId = requiredAccountId(form.getAccountId());
 		String fullName = requiredText(form.getFullName(), "Patient name is required.");
 		BigDecimal pdRight = requiredPd(form.getPdRight(), "PD Right");
@@ -103,12 +134,12 @@ public class IntakeFormService {
 		String vaLeft = requiredVisualAcuity(form.getVaLeft(), "Left");
 		String vaBoth = requiredVisualAcuity(form.getVaBoth(), "Both");
 		ReferralSource referralSource = requiredReferralSource(form.getReferralSourceId());
-		List<ChecklistItem> checklistItems = findChecklistItems();
-		if (!form.getCheckedChecklistItemIds().containsAll(checklistItems.stream().map(ChecklistItem::getId).toList())) {
+		List<ChecklistItem> checklistItems = checkChecklist ? findChecklistItems() : List.of();
+		if (checkChecklist && !form.getCheckedChecklistItemIds().containsAll(checklistItems.stream().map(ChecklistItem::getId).toList())) {
 			throw new IllegalArgumentException("All checklist items must be checked before saving.");
 		}
 
-		intakeFormRepository.save(new IntakeForm(
+		return new IntakeForm(
 				accountId,
 				fullName,
 				form.isRetinalImagingRequired(),
@@ -124,7 +155,7 @@ public class IntakeFormService {
 				nullIfBlank(form.getInsuranceName()),
 				referralSource,
 				createdBy,
-				LocalDateTime.now()));
+				LocalDateTime.now());
 	}
 
 	@Transactional
@@ -252,7 +283,7 @@ public class IntakeFormService {
 	}
 
 	private String requiredVisualAcuity(String value, String eyeName) {
-		if (!VALID_VISUAL_ACUITIES.contains(value)) {
+		if (value == null || !VALID_VISUAL_ACUITIES.contains(value)) {
 			throw new IllegalArgumentException("Visual acuity is required for " + eyeName + ".");
 		}
 		return value;

@@ -68,6 +68,17 @@ public class IntakeForm {
 	@Column(name = "created_on")
 	private LocalDateTime createdOn;
 
+	@Column(name = "created_by_user_id")
+	private Long createdByUserId;
+
+	public Long getCreatedByUserId() {
+		return createdByUserId;
+	}
+
+	public void setCreatedByUserId(Long createdByUserId) {
+		this.createdByUserId = createdByUserId;
+	}
+
 	protected IntakeForm() {
 	}
 
@@ -104,6 +115,23 @@ public class IntakeForm {
 		this.referralSource = referralSource;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
+	}
+
+	public void updateIntakeDetails(IntakeForm details) {
+		this.accountId = details.accountId;
+		this.fullName = details.fullName;
+		this.retinalImagingRequired = details.retinalImagingRequired;
+		this.doingEyeglasses = details.doingEyeglasses;
+		this.doingContactLens = details.doingContactLens;
+		this.hasInsurance = details.hasInsurance;
+		this.aided = details.aided;
+		this.pdLeft = details.pdLeft;
+		this.pdRight = details.pdRight;
+		this.vaRight = details.vaRight;
+		this.vaLeft = details.vaLeft;
+		this.vaBoth = details.vaBoth;
+		this.insuranceName = details.insuranceName;
+		this.referralSource = details.referralSource;
 	}
 
 	public Long getId() {

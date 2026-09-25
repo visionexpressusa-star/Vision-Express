@@ -300,6 +300,27 @@ body {
 	gap: 9px;
 }
 
+.intake-list-table .created-on-column {
+	width: 120px;
+	padding-left: 12px;
+	padding-right: 12px;
+	white-space: nowrap;
+}
+
+.intake-list-table .actions-heading,
+.intake-list-table .row-actions {
+	width: 270px;
+	white-space: nowrap;
+}
+
+.intake-list-table .row-actions {
+	display: table-cell;
+}
+
+.intake-list-table .table-action + .table-action {
+	margin-left: 5px;
+}
+
 .row-actions form {
 	margin: 0;
 }
@@ -377,6 +398,28 @@ body {
 	color: var(--heading);
 	font-size: 14px;
 	text-decoration: none;
+}
+
+.intake-pagination {
+	flex-wrap: wrap;
+}
+
+.intake-pagination .result-count {
+	flex-shrink: 0;
+}
+
+.intake-pagination .page-navigation {
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.intake-pagination .page-ellipsis {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 24px;
+	height: 38px;
+	color: var(--muted);
 }
 
 .page-link.current {
@@ -1099,6 +1142,24 @@ body {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 18px;
+}
+
+.optical-frame-discount-row {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.optical-frame-discount-row .form-control {
+	flex: 1;
+	min-width: 0;
+}
+
+.optical-frame-discount-row .intake-checkbox {
+	display: inline-flex;
+	flex-shrink: 0;
+	margin-bottom: 0;
+	white-space: nowrap;
 }
 
 .optical-wide-field {

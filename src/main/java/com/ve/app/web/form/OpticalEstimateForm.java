@@ -8,6 +8,7 @@ public class OpticalEstimateForm {
 	private BigDecimal insuranceDiscount;
 	private boolean buyingEyeExam;
 	private boolean buyingFrame;
+	private boolean sunglasses;
 	private boolean buyingPof;
 	private boolean buyingLenses;
 	private BigDecimal framePrice;
@@ -17,6 +18,14 @@ public class OpticalEstimateForm {
 	private String lensProtectionCoatingName;
 	private String lensTransitionOptionName;
 	private String prescriptionSource;
+
+	public boolean isSunglasses() {
+		return sunglasses;
+	}
+
+	public void setSunglasses(boolean sunglasses) {
+		this.sunglasses = sunglasses;
+	}
 
 	public Boolean getHasInsurance() {
 		return hasInsurance;

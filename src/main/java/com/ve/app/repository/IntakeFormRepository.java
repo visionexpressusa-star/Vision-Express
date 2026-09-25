@@ -68,7 +68,8 @@ public interface IntakeFormRepository extends JpaRepository<IntakeForm, Long> {
 				i.fullName,
 				i.createdBy,
 				i.createdOn,
-				p.prescribedBy)
+				p.prescribedBy,
+				i.createdByUserId)
 			FROM IntakeForm i
 			LEFT JOIN Prescription p
 				ON p.intakeForm = i

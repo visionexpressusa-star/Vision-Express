@@ -15,6 +15,8 @@
 						Intake form created successfully.
 					</div>
 
+					<div class="users-message success" th:if="${param.updated}">Intake form updated successfully.</div>
+
 					<div class="users-toolbar">
 						<form class="user-search" th:action="@{/intake-form}" method="get" role="search">
 							<label class="visually-hidden" for="intake-form-search">Search intake forms</label>
@@ -30,13 +32,13 @@
 					</div>
 
 					<div class="users-table-wrapper">
-						<table class="users-table">
+						<table class="users-table intake-list-table">
 							<thead>
 								<tr>
 									<th scope="col">Account ID</th>
 									<th scope="col">Patient Name</th>
 									<th scope="col">Created By</th>
-									<th scope="col">Created On</th>
+									<th scope="col" class="created-on-column">Created On</th>
 									<th scope="col">Referection By</th>
 									<th scope="col" class="actions-heading">Actions</th>
 								</tr>
@@ -46,11 +48,14 @@
 									<td th:text="${intakeForm.accountId}">1001</td>
 									<td th:text="${intakeForm.fullName}">Patient Name</td>
 									<td th:text="${intakeForm.createdBy}">Staff Name</td>
-									<td th:text="${intakeForm.createdOn == null ? '' : #temporals.format(intakeForm.createdOn, 'MM/dd/yyyy')}">05/26/2026</td>
+									<td class="created-on-column" th:text="${intakeForm.createdOn == null ? '' : #temporals.format(intakeForm.createdOn, 'MM/dd/yyyy')}">05/26/2026</td>
 									<td th:text="${intakeForm.prescribedBy}">Doctor Name</td>
 									<td class="row-actions">
 										<a class="table-action edit"
 										   th:href="@{/intake-form/{id}/view(id=${intakeForm.id})}">View</a>
+										<a class="table-action edit"
+										   th:if="${intakeForm.createdByUserId != null and intakeForm.createdByUserId == currentUserId}"
+										   th:href="@{/intake-form/{id}/edit(id=${intakeForm.id})}">Edit</a>
 										<a class="table-action prescription"
 										   th:if="${grantedAuthorities.contains('ROLE_ADMIN') or grantedAuthorities.contains('provide_prescription')}"
 										   th:href="@{/intake-form/{id}/prescription/create(id=${intakeForm.id})}">Refraction</a>
@@ -63,23 +68,37 @@
 						</table>
 					</div>
 
-					<div class="pagination-bar">
+					<div class="pagination-bar intake-pagination">
 						<p class="result-count"
 						   th:if="${!intakeForms.empty}"
 						   th:text="|Showing ${intakeForms.number * intakeForms.size + 1}-${intakeForms.number * intakeForms.size + intakeForms.numberOfElements} of ${intakeForms.totalElements} intake forms|">
 							Showing intake forms
 						</p>
 						<p class="result-count" th:if="${intakeForms.empty}">0 intake forms</p>
-						<nav class="page-navigation" th:if="${intakeForms.totalPages > 1}" aria-label="Intake form results pages">
+						<nav class="page-navigation" th:if="${intakeForms.totalPages > 1}"
+							 th:with="lastPage=${intakeForms.totalPages - 1},
+							          startPage=${intakeForms.totalPages <= 7 or intakeForms.number <= 3 ? 0 : (intakeForms.number >= lastPage - 3 ? lastPage - 4 : intakeForms.number - 1)},
+							          endPage=${intakeForms.totalPages <= 7 or intakeForms.number >= lastPage - 3 ? lastPage : (intakeForms.number <= 3 ? 4 : intakeForms.number + 1)}"
+							 aria-label="Intake form results pages">
 							<a class="page-link"
+							   th:attr="aria-disabled=${intakeForms.first}"
 							   th:classappend="${intakeForms.first} ? ' disabled' : ''"
 							   th:href="${intakeForms.first} ? null : @{/intake-form(search=${search}, page=${intakeForms.number - 1})}">Previous</a>
+							<a class="page-link" th:if="${startPage > 0}"
+							   th:href="@{/intake-form(search=${search}, page=0)}" aria-label="Page 1">1</a>
+							<span class="page-ellipsis" th:if="${startPage > 1}" aria-hidden="true">…</span>
 							<a class="page-link"
-							   th:each="pageNumber : ${#numbers.sequence(0, intakeForms.totalPages - 1)}"
+							   th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}"
+							   th:attr="aria-current=${pageNumber == intakeForms.number ? 'page' : null}, aria-label=|Page ${pageNumber + 1}|"
 							   th:classappend="${pageNumber == intakeForms.number} ? ' current' : ''"
 							   th:href="@{/intake-form(search=${search}, page=${pageNumber})}"
 							   th:text="${pageNumber + 1}">1</a>
+							<span class="page-ellipsis" th:if="${endPage < lastPage - 1}" aria-hidden="true">…</span>
+							<a class="page-link" th:if="${endPage < lastPage}"
+							   th:href="@{/intake-form(search=${search}, page=${lastPage})}"
+							   th:attr="aria-label=|Page ${lastPage + 1}|" th:text="${lastPage + 1}">25</a>
 							<a class="page-link"
+							   th:attr="aria-disabled=${intakeForms.last}"
 							   th:classappend="${intakeForms.last} ? ' disabled' : ''"
 							   th:href="${intakeForms.last} ? null : @{/intake-form(search=${search}, page=${intakeForms.number + 1})}">Next</a>
 						</nav>

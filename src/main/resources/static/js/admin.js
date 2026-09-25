@@ -70,6 +70,7 @@
 		var lensTransitionField = form.querySelector("[data-lens-transition-field]");
 		var lensOptionField = form.querySelector("[data-lens-option-field]");
 		var framePriceControl = form.querySelector("[name='framePrice']");
+		var sunglassesControl = form.querySelector("[name='sunglasses']");
 		var frameDiscountControl = form.querySelector("[name='selectedFrameDiscountPercent']");
 		var insuranceDiscountControl = form.querySelector("[name='insuranceDiscount']");
 		var lensTypeControl = form.querySelector("[name='lensTypeName']");
@@ -192,9 +193,25 @@
 			}, 0);
 			total = Math.max(0, Math.round(total * 100) / 100);
 
+			var sunglasses = sunglassesControl && sunglassesControl.checked && frameControl && frameControl.checked;
+			var salesTax = 0;
+			if (sunglasses) {
+				var taxableFrame = lines.reduce(function (sum, line) {
+					return line.label === "Frame" ? sum + line.amount : sum;
+				}, 0);
+				var taxableCents = Math.max(0, Math.round(taxableFrame * 100));
+				salesTax = Math.round(taxableCents * 825 / 10000) / 100;
+				total = Math.round((total + salesTax) * 100) / 100;
+				subtotal = Math.round((subtotal + salesTax) * 100) / 100;
+			}
+
 			var chargeLines = lines.filter(function (line) {
 				return line.amount >= 0;
 			});
+			if (sunglasses) {
+				var frameIndex = chargeLines.findIndex(function (line) { return line.label === "Frame"; });
+				chargeLines.splice(frameIndex + 1, 0, { label: "Sales tax (8.25%)", amount: salesTax });
+			}
 			var discountLines = lines.filter(function (line) {
 				return line.amount < 0;
 			});

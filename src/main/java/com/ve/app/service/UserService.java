@@ -44,6 +44,11 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
+	public Long findIdByUsername(String username) {
+		return userRepository.findByUsername(username).orElseThrow().getId();
+	}
+
+	@Transactional(readOnly = true)
 	public String findDisplayNameByUsername(String username) {
 		return userRepository.findByUsername(username)
 				.map(User::getDisplayName)

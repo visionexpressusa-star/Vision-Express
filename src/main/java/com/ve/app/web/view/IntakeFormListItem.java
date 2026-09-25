@@ -8,5 +8,6 @@ public record IntakeFormListItem(
 		String fullName,
 		String createdBy,
 		LocalDateTime createdOn,
-		String prescribedBy) {
+		String prescribedBy,
+		Long createdByUserId) {
 }
