@@ -29,7 +29,7 @@ function NotConfigured() {
       <section className="login-card">
         <h1>Setup needed</h1>
         <p className="login-subheading">
-          Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (see web/.env.example), then restart.
+          Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (see .env.example), then restart.
         </p>
       </section>
     </main>
