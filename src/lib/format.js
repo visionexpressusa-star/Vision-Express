@@ -6,6 +6,19 @@ export function formatDate(value) {
   return `${mm}/${dd}/${date.getFullYear()}`;
 }
 
+// Formats a date-only value ("YYYY-MM-DD") as MM/DD/YYYY without time zone shifts.
+export function formatDateOnly(value) {
+  if (!value) return "";
+  const [year, month, day] = String(value).split("-");
+  return `${month}/${day}/${year}`;
+}
+
+// Today's local date as "YYYY-MM-DD".
+export function todayIso() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
 export function formatMoney(amount) {
   const absolute = Math.abs(Number(amount) || 0).toLocaleString("en-US", {
     minimumFractionDigits: 2,

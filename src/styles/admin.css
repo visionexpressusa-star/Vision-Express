@@ -490,7 +490,7 @@ body {
 
 .intake-identity-row {
 	width: min(1040px, 100%);
-	grid-template-columns: minmax(150px, 1fr) minmax(220px, 1.6fr) minmax(90px, 0.5fr) minmax(90px, 0.5fr);
+	grid-template-columns: minmax(150px, 1fr) minmax(220px, 1.6fr) minmax(150px, 0.9fr) minmax(90px, 0.5fr) minmax(90px, 0.5fr);
 }
 
 .field-group label {
@@ -697,7 +697,7 @@ body {
 }
 
 .summary-identity-row {
-	grid-template-columns: minmax(120px, 0.8fr) minmax(190px, 1.1fr) minmax(105px, 0.55fr) minmax(105px, 0.55fr);
+	grid-template-columns: minmax(120px, 0.8fr) minmax(190px, 1.1fr) minmax(150px, 0.75fr) minmax(105px, 0.55fr) minmax(105px, 0.55fr);
 }
 
 .summary-three-row {
@@ -1608,6 +1608,13 @@ body {
 	font: inherit;
 	font-size: 15px;
 	font-weight: 600;
+}
+
+@media (max-width: 1279.98px) {
+	.intake-identity-row,
+	.summary-identity-row {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
 }
 
 @media (max-width: 991.98px) {

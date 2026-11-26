@@ -1,4 +1,4 @@
-import { plainNumber } from "../lib/format.js";
+import { formatDateOnly, plainNumber } from "../lib/format.js";
 
 function Item({ label, value, empty, className = "" }) {
   return (
@@ -19,6 +19,7 @@ export default function IntakeSummary({ intake, referralHeading = "Referral Sour
       <div className="summary-row summary-identity-row">
         <Item label="Account ID" value={intake.account_id} />
         <Item label="Patient Name" value={intake.full_name} />
+        <Item label="Date of Birth" value={formatDateOnly(intake.date_of_birth) || "-"} />
         <Item label="PD Right" value={plainNumber(intake.pd_right)} className="summary-item-pd" />
         <Item label="PD Left" value={plainNumber(intake.pd_left)} className="summary-item-pd" />
       </div>

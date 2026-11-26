@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Loading, Message, usePageTitle } from "../components/common.jsx";
 import { useAuth } from "../lib/auth.jsx";
-import { blankToNull, isPdValue, plainNumber, VISUAL_ACUITIES } from "../lib/format.js";
+import { blankToNull, isPdValue, plainNumber, todayIso, VISUAL_ACUITIES } from "../lib/format.js";
 import { supabase } from "../lib/supabase.js";
 
 const EMPTY_FORM = {
   accountId: "",
   fullName: "",
+  dateOfBirth: "",
   pdRight: "",
   pdLeft: "",
   retinalImagingRequired: false,
@@ -26,6 +27,7 @@ function fromRow(row) {
   return {
     accountId: String(row.account_id),
     fullName: row.full_name,
+    dateOfBirth: row.date_of_birth ?? "",
     pdRight: plainNumber(row.pd_right),
     pdLeft: plainNumber(row.pd_left),
     retinalImagingRequired: row.is_retinal_imaging_required,
@@ -46,6 +48,10 @@ function validate(form) {
   if (!form.accountId.trim()) throw new Error("Account ID is required.");
   if (!/^\d+$/.test(form.accountId.trim())) throw new Error("Account ID must be a number.");
   if (!form.fullName.trim()) throw new Error("Patient name is required.");
+  if (!form.dateOfBirth) throw new Error("Date of birth is required.");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth) || form.dateOfBirth < "1900-01-01" || form.dateOfBirth > todayIso()) {
+    throw new Error("Date of birth must be a valid date and not in the future.");
+  }
   for (const [value, name] of [[form.pdRight, "PD Right"], [form.pdLeft, "PD Left"]]) {
     if (!value.trim()) throw new Error(`${name} is required.`);
     if (!isPdValue(value)) throw new Error(`${name} must be a number in the format XX.X.`);
@@ -58,6 +64,7 @@ function validate(form) {
   return {
     account_id: Number(form.accountId.trim()),
     full_name: form.fullName.trim(),
+    date_of_birth: form.dateOfBirth,
     pd_right: Number(form.pdRight.trim()),
     pd_left: Number(form.pdLeft.trim()),
     is_retinal_imaging_required: form.retinalImagingRequired,
@@ -172,6 +179,11 @@ export default function IntakeFormEdit() {
             <div className="field-group">
               <label htmlFor="patient-name">Patient Name</label>
               <input id="patient-name" className="form-control" type="text" required value={form.fullName} onChange={set("fullName")} />
+            </div>
+            <div className="field-group">
+              <label htmlFor="date-of-birth">Date of Birth</label>
+              <input id="date-of-birth" className="form-control" type="date" required
+                min="1900-01-01" max={todayIso()} value={form.dateOfBirth} onChange={set("dateOfBirth")} />
             </div>
             <div className="field-group pd-field">
               <label htmlFor="pd-right">PD Right</label>

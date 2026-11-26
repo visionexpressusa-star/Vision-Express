@@ -1,7 +1,7 @@
 // Intake form PDF, generated in the browser. Mirrors IntakeFormPdfService.java.
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import { formatDate, plainNumber } from "./format.js";
+import { formatDate, formatDateOnly, plainNumber } from "./format.js";
 import { prescriptionFormFromRow } from "./prescription.js";
 
 const NAVY = [25, 48, 34];
@@ -100,7 +100,8 @@ export async function generateIntakeFormPdf(intake, prescription) {
     styles: { ...baseStyles, minCellHeight: 22, valign: "middle" },
     body: [
       [cell("Account ID", value(intake.account_id)), cell("Patient Name", value(intake.full_name)),
-        cell("PD Right", value(plainNumber(intake.pd_right))), cell("PD Left", value(plainNumber(intake.pd_left)))],
+        cell("Date of Birth", value(formatDateOnly(intake.date_of_birth))),
+        cell("PD (R / L)", `${value(plainNumber(intake.pd_right))} / ${value(plainNumber(intake.pd_left))}`)],
       [cell("Retinal Imaging", yesNo(intake.is_retinal_imaging_required)), cell("Eyeglasses", yesNo(intake.is_doing_eyeglasses)),
         cell("Contact Lens", yesNo(intake.is_doing_contact_lens)), cell("", "")],
       [cell("Has Insurance", yesNo(intake.has_insurance)),
