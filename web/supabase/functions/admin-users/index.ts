@@ -101,7 +101,7 @@ Deno.serve(async (request) => {
       const { data: existing } = await admin
         .from("profiles")
         .select("id")
-        .ilike("username", username)
+        .ilike("username", username.replace(/[\\%_]/g, "\\$&"))
         .maybeSingle();
       if (existing) {
         return fail("Username already exists.");

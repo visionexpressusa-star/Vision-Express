@@ -22,7 +22,8 @@ Price Estimator, Estimator Config, Change Password, Users.
 ## 1. Create the Supabase project
 
 1. Create a project at <https://supabase.com/dashboard>.
-2. **SQL Editor** → paste and run `supabase/migrations/20261126000000_initial_schema.sql`.
+2. **SQL Editor** → paste and run each file in `supabase/migrations/`, in name order
+   (schema, then function lock-down, then table grants).
    (Or with the Supabase CLI: `supabase link --project-ref <ref>` then `supabase db push`.)
 3. **Authentication → Sign In / Providers → Email**: keep Email enabled, turn **off** "Confirm email"
    and turn **off** "Allow new users to sign up" (only admins create users).
