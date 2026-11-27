@@ -3,6 +3,7 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { Message, Pagination, ResultCount, usePageTitle } from "../components/common.jsx";
 import { safeSearch } from "../lib/format.js";
 import { callAdminUsers, supabase } from "../lib/supabase.js";
+import { useToast } from "../components/Toast.jsx";
 
 const PAGE_SIZE = 10;
 
@@ -14,7 +15,8 @@ export default function Users() {
   const page = Math.max(0, Number(params.get("page")) || 0);
   const [searchInput, setSearchInput] = useState(search);
   const [result, setResult] = useState({ rows: [], total: 0, loading: true });
-  const [message, setMessage] = useState({ type: "success", text: location.state?.flash ?? "" });
+  const toast = useToast();
+  const [message, setMessage] = useState({ type: "error", text: "" });
 
   const load = useCallback(async () => {
     let query = supabase
@@ -36,7 +38,8 @@ export default function Users() {
   async function toggleActive(user) {
     try {
       await callAdminUsers({ action: "setActive", userId: user.id, active: !user.active });
-      setMessage({ type: "success", text: "User status updated successfully." });
+      toast(user.active ? `${user.display_name} deactivated.` : `${user.display_name} activated.`);
+      setMessage({ type: "error", text: "" });
       load();
     } catch (error) {
       setMessage({ type: "error", text: error.message });

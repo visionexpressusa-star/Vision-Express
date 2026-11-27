@@ -13,6 +13,15 @@ const ICONS = {
   users: "M16.5 20a5.5 5.5 0 0 0-11 0M11 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM17 12a3 3 0 1 0 0-6M19 20a4.5 4.5 0 0 0-3.2-4.3",
 };
 
+export function greeting() {
+  const hour = new Date().getHours();
+  return hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+}
+
+export function firstName(displayName) {
+  return (displayName ?? "").trim().split(/\s+/)[0] || "there";
+}
+
 function MenuLink({ to, icon, end, children }) {
   return (
     <NavLink className={({ isActive }) => "menu-link" + (isActive ? " active" : "")} to={to} end={end}>
@@ -79,7 +88,12 @@ export default function Layout() {
               <img src="/images/ve-logo.png" alt="Vision Express" />
             </Link>
           </div>
+          <div className="topbar-greeting">
+            <strong>{greeting()}, {firstName(profile?.display_name)}</strong>
+            <span>{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</span>
+          </div>
           <div className="account">
+            <span className="role-pill">{profile?.role === "ADMIN" ? "Admin" : "Staff"}</span>
             <span className="account-name">{profile?.display_name}</span>
             <button className="action-button logout" type="button" onClick={signOut}>Logout</button>
           </div>

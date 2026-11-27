@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Message, usePageTitle } from "../components/common.jsx";
+import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../lib/auth.jsx";
 import { emailForUsername, supabase } from "../lib/supabase.js";
 
@@ -8,6 +9,7 @@ const EMPTY = { currentPassword: "", newPassword: "", confirmPassword: "" };
 export default function ChangePassword() {
   usePageTitle("Change Password");
   const { profile } = useAuth();
+  const toast = useToast();
   const [form, setForm] = useState(EMPTY);
   const [message, setMessage] = useState({ type: "", text: "" });
   const [saving, setSaving] = useState(false);
@@ -37,7 +39,8 @@ export default function ChangePassword() {
     setSaving(false);
     if (error) return fail(error.message);
     setForm(EMPTY);
-    setMessage({ type: "success", text: "Password updated successfully." });
+    setMessage({ type: "", text: "" });
+    toast("Password updated.");
   }
 
   return (

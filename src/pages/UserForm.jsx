@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Loading, Message, usePageTitle } from "../components/common.jsx";
+import { useToast } from "../components/Toast.jsx";
 import { callAdminUsers, supabase } from "../lib/supabase.js";
 
 // Create a user (/users/create) or edit one (/users/:id/edit).
@@ -9,6 +10,7 @@ export default function UserForm() {
   const editing = Boolean(id);
   usePageTitle(editing ? "Edit User" : "Create User");
   const navigate = useNavigate();
+  const toast = useToast();
   const [permissions, setPermissions] = useState([]);
   const [form, setForm] = useState({ displayName: "", username: "", password: "", permissionIds: [] });
   const [loading, setLoading] = useState(true);
@@ -76,7 +78,8 @@ export default function UserForm() {
           permissionIds: form.permissionIds,
         });
       }
-      navigate("/users", { state: { flash: editing ? "User updated successfully." : "User created successfully." } });
+      toast(editing ? "User updated." : "User created.");
+      navigate("/users");
     } catch (saveError) {
       setError(saveError.message);
       setForm((current) => ({ ...current, password: "" }));

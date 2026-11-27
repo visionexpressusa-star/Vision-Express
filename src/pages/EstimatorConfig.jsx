@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loading, Message, usePageTitle } from "../components/common.jsx";
+import { useToast } from "../components/Toast.jsx";
 import { loadEstimatorConfig } from "../lib/config.js";
 import { supabase } from "../lib/supabase.js";
 
@@ -76,6 +77,7 @@ export default function EstimatorConfig() {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState({ type: "", text: "" });
   const [saving, setSaving] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     loadEstimatorConfig()
@@ -109,7 +111,8 @@ export default function EstimatorConfig() {
       return;
     }
     setForm(toForm(data));
-    setMessage({ type: "success", text: "Configuration saved successfully." });
+    setMessage({ type: "", text: "" });
+    toast("Estimator configuration saved.");
   }
 
   return (

@@ -14,7 +14,29 @@ export function Message({ type = "success", children }) {
 }
 
 export function Loading() {
-  return <p className="result-count">Loading…</p>;
+  return (
+    <div className="loading-block" role="status">
+      <span className="spinner" aria-hidden="true"></span> Loading…
+    </div>
+  );
+}
+
+// Age in whole years from a "YYYY-MM-DD" date of birth.
+export function ageFrom(dateOfBirth) {
+  if (!dateOfBirth) return null;
+  const [year, month, day] = dateOfBirth.split("-").map(Number);
+  const now = new Date();
+  let age = now.getFullYear() - year;
+  if (now.getMonth() + 1 < month || (now.getMonth() + 1 === month && now.getDate() < day)) age -= 1;
+  return age;
+}
+
+export function RefractionBadge({ done, by }) {
+  return done ? (
+    <span className="badge-pill badge-success" title={by ? `Refraction by ${by}` : undefined}>Done{by ? ` · ${by}` : ""}</span>
+  ) : (
+    <span className="badge-pill badge-warning">Waiting</span>
+  );
 }
 
 export function AccessDenied() {

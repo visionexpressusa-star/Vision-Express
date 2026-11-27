@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import IntakeSummary from "../components/IntakeSummary.jsx";
 import PrescriptionFields from "../components/PrescriptionFields.jsx";
 import { Loading, Message, usePageTitle } from "../components/common.jsx";
+import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../lib/auth.jsx";
 import { prescriptionFormFromRow, prescriptionRowFromForm, single } from "../lib/prescription.js";
 import { supabase } from "../lib/supabase.js";
@@ -16,7 +17,7 @@ export default function Prescription() {
   const [meta, setMeta] = useState({ by: "", on: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [saved, setSaved] = useState(false);
+  const toast = useToast();
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -42,7 +43,6 @@ export default function Prescription() {
   async function submit(event) {
     event.preventDefault();
     setError("");
-    setSaved(false);
     let row;
     try {
       row = prescriptionRowFromForm(form);
@@ -64,7 +64,7 @@ export default function Prescription() {
       return;
     }
     setMeta({ by: data.prescribed_by, on: data.prescribed_on });
-    setSaved(true);
+    toast(`Refraction saved for ${intake.full_name}.`);
   }
 
   if (loading) return <Loading />;
@@ -76,7 +76,6 @@ export default function Prescription() {
         <Link className="back-link" to="/intake-form">Back to intake forms</Link>
       </div>
 
-      <Message>{saved && "Refraction saved successfully."}</Message>
       <Message type="error">{error}</Message>
 
       {intake && (

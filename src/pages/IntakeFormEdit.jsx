@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Loading, Message, usePageTitle } from "../components/common.jsx";
+import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../lib/auth.jsx";
 import { blankToNull, isPdValue, plainNumber, todayIso, VISUAL_ACUITIES } from "../lib/format.js";
 import { supabase } from "../lib/supabase.js";
@@ -86,6 +87,7 @@ export default function IntakeFormEdit() {
   usePageTitle(editing ? "Edit Intake Form" : "Create Intake Form");
   const { session } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
   const [form, setForm] = useState(EMPTY_FORM);
   const [checklist, setChecklist] = useState([]);
   const [checked, setChecked] = useState(new Set());
@@ -152,9 +154,8 @@ export default function IntakeFormEdit() {
       window.scrollTo(0, 0);
       return;
     }
-    navigate("/intake-form", {
-      state: { flash: editing ? "Intake form updated successfully." : "Intake form created successfully." },
-    });
+    toast(editing ? "Intake form updated." : "Intake form created.");
+    navigate("/intake-form");
   }
 
   if (loading) return <Loading />;

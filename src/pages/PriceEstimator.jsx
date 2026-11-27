@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Loading, Message, usePageTitle } from "../components/common.jsx";
+import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../lib/auth.jsx";
 import { loadEstimatorConfig } from "../lib/config.js";
 import { calculateEstimate } from "../lib/estimate.js";
@@ -32,10 +33,27 @@ function priced(name, amount) {
 
 export default function PriceEstimator() {
   usePageTitle("Price Estimator");
-  const { hasPermission } = useAuth();
+  const { hasPermission, profile } = useAuth();
+  const toast = useToast();
   const [config, setConfig] = useState(null);
   const [error, setError] = useState("");
   const [form, setForm] = useState(INITIAL);
+  const [customerName, setCustomerName] = useState("");
+  const [printing, setPrinting] = useState(false);
+
+  async function printQuote(estimate) {
+    setPrinting(true);
+    try {
+      // Loaded on demand so the PDF library stays out of the main bundle.
+      const { generateEstimatePdf } = await import("../lib/quotePdf.js");
+      await generateEstimatePdf(estimate, { customerName, preparedBy: profile?.display_name, insurance: form.insurance });
+      toast("Estimate PDF downloaded.");
+    } catch (pdfError) {
+      toast(`Could not create the PDF: ${pdfError.message}`, "error");
+    } finally {
+      setPrinting(false);
+    }
+  }
 
   useEffect(() => {
     loadEstimatorConfig().then(setConfig).catch((loadError) => setError(loadError.message));
@@ -225,7 +243,29 @@ export default function PriceEstimator() {
               </table>
             </div>
           ) : (
-            <div className="empty-results optical-empty-summary">No estimate calculated.</div>
+            <div className="empty-results optical-empty-summary">
+              Choose what the customer is buying to see the estimate.
+            </div>
+          )}
+          {estimate && (
+            <div className="quote-actions">
+              <div className="field-group">
+                <label htmlFor="quote-customer">Customer name (optional, for the printout)</label>
+                <input id="quote-customer" className="form-control" type="text" value={customerName}
+                  onChange={(event) => setCustomerName(event.target.value)} placeholder="e.g. Maria Lopez" />
+              </div>
+              <button className="toolbar-button create-button" type="button" onClick={() => printQuote(estimate)}
+                disabled={printing}>
+                {printing ? "Preparing PDF…" : "Print / Save estimate PDF"}
+              </button>
+              <button className="toolbar-button secondary-button" type="button"
+                onClick={() => {
+                  setForm(INITIAL);
+                  setCustomerName("");
+                }}>
+                Start a new estimate
+              </button>
+            </div>
           )}
         </aside>
       </div>
